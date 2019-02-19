@@ -1,4 +1,4 @@
-//import App from "./js/components/container/App";
+import App from "../src/App";
 
 
 import Scanner from '../css/scan.scss';
