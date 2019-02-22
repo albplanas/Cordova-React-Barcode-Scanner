@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-//import Profile from "./Profile/Profile"
+
+import Home from "./Home/Home"
 
 import { createStore,combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
-//import globalStateReducer from '../../../store/reducers/globalState';
+import globalStateReducer   from '../src/store/reducers/globalState';
 //import localStateReducer  from '../../../store/reducers/localState';
-//import listReducer        from '../../../store/reducers/list';
-//import reportReducer      from '../../../store/reducers/report';
+import dataReducer          from '../src/store/reducers/DataCenter';
+import dataBaseReducer      from '../src/store/reducers/DataBase';
 
 const rootReducers = combineReducers({
-  //globalState  : globalStateReducer,
-  //list         :listReducer,
-  //report       :reportReducer,
+  globalState  : globalStateReducer,
+  dataState    : dataReducer,
+  dataBase     :dataBaseReducer ,
   //localState   : localStateReducer      
 
 }) 
@@ -27,7 +28,7 @@ class App extends Component {
   render() {
     
     return (
-      <h1>Hello World</h1>
+              <Home/>
     );
   }
 }

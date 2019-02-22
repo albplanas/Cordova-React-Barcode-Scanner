@@ -28,6 +28,16 @@ module.exports = {
             loader: "sass-loader" // compiles Sass to CSS
         }]
       },
+       // the url-loader uses DataUrls. 
+      // the file-loader emits files. 
+      { 
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
+        loader: "url-loader?limit=10000&mimetype=application/font-woff" 
+      },
+      { 
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
+        loader: "file-loader" 
+      },
       {
         test: /\.html$/,
         use: [
