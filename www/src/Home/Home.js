@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import axios from "axios"
 import Start from "./Start/Start";
 import ProductsReportCenter from  "./MODULE_Inventary/ProductsReportCenter";
-import FetchData from "./Send/FetchData"
-
+import ReportState from           "./MODULE_Assistence/ReportState"
 
 import * as actionTypes from "../store/actions" 
 
@@ -71,17 +70,41 @@ class Home extends Component {
 
                                         ];
                  window.localStorage.setItem(query,JSON.stringify(OldReportsList));
-
+                 this.props.onUpdateDataBase(query,OldReportsList)
+             
               }
             else{
                             axios.get("http://jva-sql:8080/Assistance/GetJson.php?table="+query)
                             .then((response)=> {
                                 
+                                  if(query==="Supervisor"){
+                                    var  newId  =  [
+                                      "Mandy",
+                                      "Ramon",
+                                      "Jose Perez",
+                                      "Pablo Orta",
+                                      "HectorParedes",
+                                      "Juan Carlos Rodriguez"
+                                  ];
+                                  }
+                                  else if(query==="Inventory"){
                                     var  newId =response.data.map(elem=>{return [elem.Code,elem.Name] })
+                                  }
+                                  else if(query==="Labor"){
+                                    var  newId =response.data.map(elem=>{return [elem.idLabor,elem.labor] })
+                                  }
+                                  else if(query==="Project"){
+                                    var newId =response.data.map(elem=>{return [elem.projectcode,elem.idProject,elem.projectname,elem.projectlocation]});
+
+                                  }
+                                  else if(query==="Employee"){
+                                    var newId =response.data.map(elem=>{return [elem.Employee,elem.IdEmployee]})
+                                  }
+                                 
                                     
                                     window.localStorage.setItem(query,JSON.stringify(newId));
-                                    this.props.onUpdateDataBase(newId)
-                                    console.log("NULL Entrance")
+                                    this.props.onUpdateDataBase(query,newId)
+                                    
                                     
                             })
                             .catch(error => {
@@ -94,33 +117,34 @@ class Home extends Component {
     
         }
         else{
-            console.log("Defined Entrance")
-            this.props.onUpdateDataBase(JSON.parse(window.localStorage.getItem(query)))
+            
+            this.props.onUpdateDataBase(query,JSON.parse(window.localStorage.getItem(query)))
         }
       }
     componentWillMount(){
-        
-       //First Time
-
-      window.localStorage.clear();
            
-            
+       // window.localStorage.clear();    
+        
       this.GetStared("Inventory");
-      
+      this.GetStared("Supervisor");
+      this.GetStared("Employee");
+      this.GetStared("Project");
+      this.GetStared("Labor");
       this.GetStared("OldReportsList"); 
 
-        console.log(window.localStorage)
       }
  
+   
 
     render() { 
-   
+     
       return (
           <div>
              
                 {   
-                    this.props.door === "start"  ?         <Start/> :
-                    this.props.door === "productsReport"?  <ProductsReportCenter/>:
+                    this.props.door === "start"  ?    <Start/> :
+                    this.props.door === "inventary"?  <ProductsReportCenter />:
+                    this.props.door === "assistence"? <ReportState />:
                                                            <div/>
                  }
 
@@ -131,13 +155,14 @@ class Home extends Component {
   const mapStateToProps = state => {
       
     return {
-        door      :state.globalState.door
+        door      :state.globalState.door,
+        date      :state.globalState.date
     };
   };
  const mapDispatchToProps = dispatch => {
     return {
         onSelectDoor: (value) => dispatch({type: actionTypes.DOOR , value:value}),
-        onUpdateDataBase : (value) => dispatch({type: actionTypes.UPDATEDATABASE ,value:value}),
+        onUpdateDataBase : (property,value) => dispatch({type: actionTypes.UPDATEDATABASE ,property:property,value:value}),
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps )(Home);

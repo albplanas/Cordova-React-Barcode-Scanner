@@ -21,7 +21,19 @@ const reducer = (state = initialState, action) => {
                             ...state,
                             door:action.value
 
-                        }  
+                        } 
+        case actionTypes.SETDAY:
+                        return {
+                            ...state,
+                            supervisorSelect:   action.value.supervisor,
+                            dateSelect:         action.value.date,
+                        }   
+        case actionTypes.LANGUAGE:
+            var lan=action.value==="es"?"es":"en"
+                        return {
+                            ...state,
+                            lang:   lan
+                        } 
  
                                                                            
     }

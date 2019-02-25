@@ -19,7 +19,24 @@ class TopBar extends Component {
         this.props.onSelectDoor("start");
       }
  
+      componentWillMount() {
 
+        this.setState({ 
+          date:this.props.date,
+        })
+    
+      }
+    
+      //Update the list
+     componentWillReceiveProps(nextProps) {
+    
+                if(nextProps.date!==this.state.date) {
+                        this.setState({ 
+                        date:nextProps.date
+                        })
+                }           
+        
+        }
     render() { 
    
       return (
@@ -30,7 +47,7 @@ class TopBar extends Component {
                   
  
                     <div class="navbar-item m-auto text-white">
-                                <h5 >03-01-2019</h5>
+                                <h5 >{this.state.date}</h5>
                     </div>
                 </nav>
 
@@ -40,7 +57,8 @@ class TopBar extends Component {
   const mapStateToProps = state => {
       
     return {
-        door      :state.globalState.door
+        door      :state.globalState.door,
+        date      :state.globalState.dateSelect
     };
   };
  const mapDispatchToProps = dispatch => {

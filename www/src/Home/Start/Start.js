@@ -23,11 +23,24 @@ import CardReport from "../InformationCards/Status"
         card:false
       }
       this.Send         = this.Send.bind(this);
-      this.closeCard=this.closeCard.bind(this);
-      this.CkeckStatus=this.CkeckStatus.bind(this);
+      this.closeCard    =this.closeCard.bind(this);
+      this.Lang         =this.Lang.bind(this);
+      this.CkeckStatus  =this.CkeckStatus.bind(this);
+      this.Select=this.Select.bind(this);
     }
 
+    Select(){
+         
+      var value={
+         supervisor:        document.getElementById("inlineFormCustomSelectSuperv").value,
+         date      :       document.getElementById("date").value
+      }
 
+
+    
+         this.props.onSetDay(value)
+        
+  }
     CkeckStatus(){
       this.setState({ 
           card:true
@@ -39,11 +52,43 @@ import CardReport from "../InformationCards/Status"
           card:false
         })
    }
+   Lang(){
+    var value= document.getElementById("language").value;
+   
+    this.props.onSelectLanguage(value);
+ }
 
+
+
+
+ //Send
    Send(){
      var sms=send();
    }
-  
+
+   
+   componentWillMount() {
+
+    this.setState({ 
+      sms:this.props.sms,
+      name:this.props.name,
+      lang:this.props.lang
+    })
+
+  }
+
+  //Update the list
+ componentWillReceiveProps(nextProps) {
+
+            if(nextProps.sms!==this.state.sms || nextProps.name!==this.state.name || nextProps.lang!==this.state.lang) {
+                    this.setState({ 
+                    sms:nextProps.sms,
+                    name:nextProps.name,
+                    lang:nextProps.lang
+                    })
+            }           
+    
+    }
       render() { 
 
         //Supervisors
@@ -64,6 +109,10 @@ import CardReport from "../InformationCards/Status"
        
        var  optionDate=arrayDate.map(elem=>{ return ( <option className="text-dark" value={elem} >{elem}</option> )})
 
+       var style ={    backgroundSize: "contain",
+                      backgroundImage:this.state.lang==="es"?"url('https://countryflags.io/ES/shiny/64.png')":
+                                                             "url('https://countryflags.io/GB/shiny/64.png')"
+                 }
         return (
 
           <div id="Log" >
@@ -71,7 +120,7 @@ import CardReport from "../InformationCards/Status"
           <section>
       
               <div class="layer"></div>
-              <button  class="btn btn-dark shadow btn-block text-warning m-3" onClick={this.CkeckStatus} id="statusBtn"  > <h5 className="pt-2">{this.state.lang==="es"?"Revisar el estado de los reportes":"CheckStatus Report "} </h5></button> 
+              <button  class="btn btn-dark shadow btn-block text-warning m-3" onClick={this.CkeckStatus} id="statusBtn"  > <h5 className="pt-2">{this.state.lang==="es"?"Revisar el estado de los reportes":"Check Status Report "} </h5></button> 
               
               <div class="login-form">
              
@@ -85,30 +134,37 @@ import CardReport from "../InformationCards/Status"
                           <select class="custom-select custom-select-lg  mb-3"  id="date" value={this.state.date} >
                               {optionDate}
                       </select>
-      
+                      
                      
       
                          </div>
                      
-                     
+                     <div className="container m-auto d-flex justify-content-center" style ={{maxWidth: "300px"}} >
+                              
+                               <select style={style} class="custom-select mt-2 mb-3 "  id="language"  onChange={this.Lang}>
+                                        <option className="text-dark" value="es">Español</option>
+                                        <option className="text-dark" value="en">English</option>
+                                        
+                                </select>
+                     </div>
               
                    
                          <div className="container mt-5 ">
                              
                              <div className="row d-flex justify-content-center">
                                        <div className="col-md-7  mb-3 d-flex justify-content-center">
-                                               <button  class="btn btn-lg btn-primary mainBtns">
-                                               <FontAwesomeIcon icon={faClipboardList} size={"lg"}/> <span className="ml-3">ASSISTENCE</span>
+                                               <button  class="btn btn-lg btn-primary mainBtns" onClick={()=>{this.props.onSelectDoor("assistence");this.Select();}}>
+                                               <FontAwesomeIcon icon={faClipboardList} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"ASISTENCIA":" ASSISTENCE "}</span>
                                              </button>
                                        </div>
                                        <div className="col-md-7 mb-3 d-flex justify-content-center">
-                                               <button className="btn btn-lg btn-primary mainBtns"  onClick={()=>{this.props.onSelectDoor("productsReport");}}>
-                                                           <FontAwesomeIcon icon={ faBarcode} size={"lg"}/> <span className="ml-3">INVENTARY</span>      
+                                               <button className="btn btn-lg btn-primary mainBtns"  onClick={()=>{this.props.onSelectDoor("inventary");this.Select();}}>
+                                                           <FontAwesomeIcon icon={ faBarcode} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"INVENTARIO":" INVENTARY "}</span>      
                                                    </button>
                                        </div>
                                        <div className="col-md-7 mb-3 d-flex justify-content-center">
                                                  <button className="btn btn-lg btn-info mainBtns"  onClick={this.Send}>
-                                                 <FontAwesomeIcon icon={ faPaperPlane} size={"lg"}/> <span className="ml-3">SEND</span>  
+                                                 <FontAwesomeIcon icon={ faPaperPlane} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"ENVIAR":" SEND"}</span>  
                                                  </button>
                                        </div>
                 
@@ -132,12 +188,16 @@ import CardReport from "../InformationCards/Status"
         
       return {
           door      :state.globalState.door,
-          listSupervisor:state.dataBase.listSupervisor
+          lang      :state.globalState.lang,
+          listSupervisor:state.dataBase.Supervisor
       };
     };
    const mapDispatchToProps = dispatch => {
       return {
           onSelectDoor: (value) => dispatch({type: actionTypes.DOOR , value:value}),
+          onSelectLanguage: (value) => dispatch({type: actionTypes.LANGUAGE , value:value}),
+          onSetDay:     (value) => dispatch({type: actionTypes.SETDAY , value:value}),
+          onSMS:        (sms,name) => dispatch({type:  actionTypes.SETSMS , sms:sms,name:name})
       };
   };
     export default connect(mapStateToProps,mapDispatchToProps )(Start);

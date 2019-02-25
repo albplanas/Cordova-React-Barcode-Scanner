@@ -1,16 +1,17 @@
-import * as actionTypes from '../actions';
-import {InventaryName } from '../../Helper/Conversor';    
+import * as actionTypes from '../actions'; 
 
 const initialState = {
     Inventory:[],
-    listSupervisor:[
+    Supervisor:[
         "Mandy",
         "Ramon",
         "Jose Perez",
         "Pablo Orta",
         "HectorParedes",
         "Juan Carlos Rodriguez"
-    ]
+    ],
+    Labor:[]
+
 }
 const reducer = (state = initialState, action) => {
 
@@ -19,11 +20,12 @@ const reducer = (state = initialState, action) => {
        
       
         case actionTypes.UPDATEDATABASE:
-       
+
+
+                        console.log(action.property,action.value)
                         return {
                             ...state,
-                            Inventory:action.value
-
+                            [action.property]:action.value
                         }                  
  
     }
