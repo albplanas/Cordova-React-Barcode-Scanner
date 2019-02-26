@@ -7,7 +7,7 @@ import {SetLocalReport} from "./../../../Helper/setLocalStorage"
 import {rowChecker} from     "./../../../Helper/Validation"
 import {CompareObjects} from "./../../../Helper/Conversor"
 import Table from "./Table";
-import {AlertDeleteFull,Spacecraft} from "../../InformationCards/Alert"
+import {AlertDeleteFull} from "../../InformationCards/Alert"
 
 
 
@@ -52,46 +52,66 @@ class TableCenter extends Component {
 
 
      }
-     AddProject(e){
-        e.preventDefault();
-      
 
-        if( rowChecker(this.state.ShowReport) ){
-                        if(this.props.Project.length > this.state.ShowReport[0].idproject.length){
-                            var ProjetsAvailable=this.props.Project.filter(elem => this.state.ShowReport[0].idproject.indexOf(elem.id)===-1);
+
+
+
+     AddProject(e){
+                
+           
+
+            if(rowChecker(this.state.ShowReport)===true){
+
+
+                var ProjetsAvailable=this.props.Project.filter(elem => this.state.ShowReport[0].idproject.indexOf(elem[1])===-1);
+
+                if(ProjetsAvailable.length>0){
+
                             var newShowReport=this.state.ShowReport;
-                       
-                            newShowReport[0].idproject.push(ProjetsAvailable[0].id)
+                            
+                            newShowReport[0].idproject.push(ProjetsAvailable[0][1])
+            
                             newShowReport.push({
                                 Signature: "",
                                 id:Math.random()*1000000,
                                 hrs: "",
                                 idemployee: "",
                                 idlabor: "",
-                                idproject:ProjetsAvailable[0].id
+                                idproject:ProjetsAvailable[0][1]
                             })
+            
+                            //Update
                             this.props.onUpdateLocal(newShowReport);
                             SetLocalReport(newShowReport)
                             this.setState({
                                 ShowReport:newShowReport
                             })
-                        }
-                        else{
-                            this.props.onSMS("FullProjects","full")
-                        }
-        }
-        else{
-            this.props.onSMS("Complete","")
-        }
+
+
+                }
+
+                else{
+                    this.props.onSMS("FullProjects","full")
+                }
+              
+            }
+
+            else{
+                this.props.onSMS("Complete","")
+            }
+
             
      }
 
 
      AskDelete(id){
-        console.log("AskDelete",id)
+      
        this.setState({openAlert:true ,deleteId:id})
        
     }
+
+
+
      deleteWholeProject(){
          var id=this.state.deleteId-0;
         var newShowReport=this.state.ShowReport.filter(elem=> elem.idproject!==id);
@@ -144,7 +164,7 @@ class TableCenter extends Component {
 
 
 
-        console.log(this.props)
+        console.log("TableCenter",this.state)
 
 
         var byProjects=this.state.ShowReport[0].idproject.map((idP)=>{

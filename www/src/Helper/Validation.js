@@ -2,7 +2,10 @@ var  signChecker = array => array.filter(e=>e.Signature.length===0).length===0?t
 
 
 
-var rowChecker= array => array.filter(e=> e.idemployee==="" || e.idlabor==="" || e.hrs==="").length===0?true:false
+var rowChecker= array => {
+    console.log(array)
+    return array.filter(e=> e.idemployee==="" || e.idlabor==="" || e.hrs==="").length===0?true:false
+}
 
 var hrsChecker= (array,idName) => {
    

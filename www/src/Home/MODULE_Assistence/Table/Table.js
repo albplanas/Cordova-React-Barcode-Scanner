@@ -107,7 +107,6 @@ class Table extends Component {
         var id      =this.state.ShowReport.length>0?this.state.ShowReport[1].idproject:this.props.Project[0][1];
 
  
-console.log("Table")
       return(     
       <div style={{margin:"20px",marginTop:"60px"}}>  
                 <div className="container row mb-4">

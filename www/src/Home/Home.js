@@ -23,7 +23,7 @@ class Home extends Component {
 
     GetStared(query){
         if(window.localStorage.getItem(query)===null){ 
-
+            console.log("isNull");
             if(query==="OldReportsList"){
                 var OldReportsList=[
                                         [{
@@ -122,9 +122,9 @@ class Home extends Component {
         }
       }
     componentWillMount(){
-           
-       // window.localStorage.clear();    
-        
+      console.log("S1",window.localStorage) 
+      window.localStorage.clear();    
+        console.log("S2",window.localStorage)
       this.GetStared("Inventory");
       this.GetStared("Supervisor");
       this.GetStared("Employee");

@@ -48,13 +48,13 @@ const reducer = (state = initialState, action) => {
         case actionTypes.UPDATELOCALREPORT:
              
 
-                         
+                         console.log("Actions",action)
                             if(Array.isArray(action.value) ){
                                 if(action.value.length===0){
                                     var newReport=[{
                                         send:false,
                                         idproject:[8],
-                                        date:formatDate(state.date),
+                                        date:formatDate(action.date),
                                         materials:"",
                                         equipments:"",
                                         production:"",
@@ -78,7 +78,7 @@ const reducer = (state = initialState, action) => {
                                     var newReport=[{
                                                             send:false,
                                                             idproject:[8],
-                                                            date:formatDate(state.date),
+                                                            date:formatDate(action.date),
                                                             materials:"",
                                                             equipments:"",
                                                             production:"",
