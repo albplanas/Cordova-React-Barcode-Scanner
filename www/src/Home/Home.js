@@ -79,7 +79,7 @@ class Home extends Component {
                                 
                                   if(query==="Supervisor"){
                                     var  newId  =  [
-                                      "Mandy",
+                                      "Armando Yorca",
                                       "Ramon",
                                       "Jose Perez",
                                       "Pablo Orta",
@@ -122,9 +122,9 @@ class Home extends Component {
         }
       }
     componentWillMount(){
-      console.log("S1",window.localStorage) 
+    
       window.localStorage.clear();    
-        console.log("S2",window.localStorage)
+  
       this.GetStared("Inventory");
       this.GetStared("Supervisor");
       this.GetStared("Employee");

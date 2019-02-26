@@ -54,7 +54,7 @@ class Materials extends Component {
      }
 
     render() {
-        console.log("Materials")
+  
 
         return (
             <div class="container mt-5 mb-5">

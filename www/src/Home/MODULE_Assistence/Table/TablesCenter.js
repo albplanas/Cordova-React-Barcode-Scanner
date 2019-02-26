@@ -9,7 +9,7 @@ import {CompareObjects} from "./../../../Helper/Conversor"
 import Table from "./Table";
 import {AlertDeleteFull} from "../../InformationCards/Alert"
 
-
+import SendAlert from"../../InformationCards/SendAlert"
 
 
 class TableCenter extends Component {
@@ -17,11 +17,14 @@ class TableCenter extends Component {
         super(props);
        this.state={
         deleteId:"_",
-        openAlert:false
+        openAlert:false,
+        smsOpen:false,
+        sms:"Something"
        }
         this.onUpdate= this.onUpdate.bind(this);
         this.deleteWholeProject=this.deleteWholeProject.bind(this);
         this.AddProject= this.AddProject.bind(this);
+        this.closeAlert=this.closeAlert.bind(this)
      }
 
      onUpdate(report,id,ProjChange){
@@ -91,13 +94,21 @@ class TableCenter extends Component {
                 }
 
                 else{
-                    this.props.onSMS("FullProjects","full")
+                    this.setState({
+                        sms:"FullProjects",
+                        smsOpen:true
+                    })
+                    
                 }
               
             }
 
             else{
-                this.props.onSMS("Complete","")
+                this.setState({
+                    sms:"Complete",
+                    smsOpen:true
+                })
+                
             }
 
             
@@ -109,7 +120,12 @@ class TableCenter extends Component {
        this.setState({openAlert:true ,deleteId:id})
        
     }
-
+    closeAlert(){
+        this.setState({
+            sms:"",
+            smsOpen:false
+        })
+      }
 
 
      deleteWholeProject(){
@@ -164,7 +180,6 @@ class TableCenter extends Component {
 
 
 
-        console.log("TableCenter",this.state)
 
 
         var byProjects=this.state.ShowReport[0].idproject.map((idP)=>{
@@ -179,7 +194,7 @@ class TableCenter extends Component {
 
         var TablesbyProjects=[];
 
-        byProjects.forEach((projectsReport,index) => {
+        byProjects.forEach((projectsReport) => {
            
             TablesbyProjects.push(<Table 
                                             lang={this.props.lang} 
@@ -187,7 +202,7 @@ class TableCenter extends Component {
                                             Project={this.props.Project} 
                                             report={projectsReport} 
                                             Update={(report,newID,ProjChange)=>{this.onUpdate(report,newID,ProjChange)}}  
-                                            onSMS={(sms,name)=>{this.props.onSMS(sms,name);}}
+                                           
                                             OldReports={this.props.OldReports}
                                             WholeList = {this.props.WholeList}
                                             idEmloyeeList={this.props.idEmloyeeList}
@@ -210,6 +225,7 @@ class TableCenter extends Component {
                     </div>
                   <hr/>
                   {this.state.openAlert? <AlertDeleteFull  Pass={this.deleteWholeProject}  />:<div/>}
+                  {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
        </div>
         )
     }
@@ -239,8 +255,7 @@ class TableCenter extends Component {
   };
  const mapDispatchToProps = dispatch => {
     return {
-      onUpdateLocal: (value) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value}),
-      onSMS:        (sms,name) => dispatch({type:  actionTypes.SETSMS , sms:sms,name:name})
+      onUpdateLocal: (value) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value})
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps)(TableCenter);

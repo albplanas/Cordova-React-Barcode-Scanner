@@ -2,7 +2,6 @@ import React,{Component} from "react";
 import { connect } from 'react-redux';
 
 import * as actionTypes from '../../store/actions';
-import SendAlert from "../InformationCards/SendAlert";
 import TopBar from "./Table/TopBar"
 import TableCenter from "./Table/TablesCenter"
 
@@ -21,10 +20,10 @@ class reportForm extends Component {
           sms:""
         }
 
-        this.Recover=this.Recover.bind(this)
+
      }
 
-Recover(){   this.props.onSMS("","") }
+
 
 
   componentWillMount() {
@@ -67,7 +66,7 @@ Recover(){   this.props.onSMS("","") }
             <h3 className="text-center mt-5 " style={{fontFamily:"Cookie"}}>{this.state.lang==="es"?"Comentarios":"General description"} </h3>
            
             <Materials/>
-            < SendAlert clear ={this.Recover} info={this.state} lang={this.state.lang}/>
+
            
           </div>                                         
    );
@@ -90,7 +89,7 @@ Recover(){   this.props.onSMS("","") }
   };
   const mapDispatchToProps = dispatch => {
     return {
-      onSMS:        (sms,name) => dispatch({type:  actionTypes.SETSMS , sms:sms,name:name})
+
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps)(reportForm);

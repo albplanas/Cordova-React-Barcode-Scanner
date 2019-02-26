@@ -9,14 +9,18 @@ import {SetLocalReport} from "../../../Helper/setLocalStorage"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus,faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 
+import SendAlert from"../../InformationCards/SendAlert"
 
 class Table extends Component {
     constructor(props) {
         super(props);
-
+        this.state={
+            smsOpen:false,
+            sms:"Something"
+           }
         
           this.AddRow          =this.AddRow.bind(this);
-
+          this.closeAlert=this.closeAlert.bind(this)
           this.chooseProject        = this.chooseProject.bind(this)
      }
      chooseProject(e){
@@ -37,6 +41,14 @@ class Table extends Component {
             ShowReport:Newest
          })
 
+      }
+
+
+      closeAlert(){
+        this.setState({
+            sms:"",
+            smsOpen:false
+        })
       }
      AddRow(e){
             e.preventDefault();
@@ -69,7 +81,10 @@ class Table extends Component {
 
         }
         else{
-            this.props.onSMS("Complete","")
+            this.setState({
+                sms:"Complete",
+                smsOpen:true
+            })
         }
     }
         
@@ -155,7 +170,7 @@ class Table extends Component {
                                                  Project={this.props.Project} 
                                                  ShowReport={this.state.ShowReport} 
                                                  Update={(report,newID,ProjChange)=>{this.props.Update(report,newID,ProjChange)}}  
-                                                 onSMS={(sms,name)=>{this.props.onSMS(sms,name);}}
+                                                
                                                  OldReports={this.props.OldReports}
                                                  WholeList = {this.props.WholeList}
                                                  idEmloyeeList={this.props.idEmloyeeList}
@@ -166,6 +181,7 @@ class Table extends Component {
                                     </table>
             
                     </div>
+                    {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
          </div>  
         )
     }

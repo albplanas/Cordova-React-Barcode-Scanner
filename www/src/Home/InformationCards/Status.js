@@ -20,7 +20,7 @@ import {formatDate} from "./../../Helper/Conversor"
                 var Filter=AllOfThem.filter(e=>e[0].date===formatDate(date));
                 
                 var status = Filter.length===0 ? "Missing":Filter[0][0].send?"Sent":"Draft"
-                var estatus= Filter.length===0 ? "No Existente":Filter[0][0].send?"Enviado":"Borrador"
+                var estatus= Filter.length===0 ? "No Existente":Filter[0][0].send?"Enviado":"No Terminado"
                 var classes = Filter.length===0 ? "text-warning border-warning":Filter[0][0].send?"text-success border-success":"text-danger border-danger"
                 return (
                         <li class="list-group-item d-flex justify-content-between align-items-center">

@@ -87,8 +87,7 @@ class TopBar extends Component {
  const mapDispatchToProps = dispatch => {
     return {
       onSelectDoor: (value) => dispatch({type: actionTypes.DOOR ,value:value}),
-      onSetReport:  (value) => dispatch({type:  actionTypes.UPDATELOCALREPORT , value:value}),
-      onSMS:        (sms,name) => dispatch({type:  actionTypes.SETSMS , sms:sms,name:name})
+      onSetReport:  (value) => dispatch({type:  actionTypes.UPDATELOCALREPORT , value:value})
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps)(TopBar);

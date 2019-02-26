@@ -49,27 +49,67 @@ class AlertDeleteFull extends React.Component {
 }
 
 
+class Alert extends React.Component {
+  constructor(props) {
+    super(props);
+   this.state={
+    visible:true
+   }
+      this.onClose=this.onClose.bind(this);
+      this.onPass=this.onPass.bind(this);
+ }
 
-function Alert(props){
+
+ componentWillMount(){
+
+    this.setState({
+      visible:this.props.open
+    })
+
+ }
+
+ componentWillReceiveProps(nextProps){
+   if(this.state.visible!==nextProps.open){
+          this.setState({
+            visible:nextProps.open
+          })
+   }
+ }
+
+ onClose(){
+  console.log("Click")
+  this.setState({
+    visible:false
+  })
+ }
+ onPass(){
+  this.props.Pass();
+  this.setState({
+    visible:false
+  })
+ }
+ 
+
+  render() {
+  
     return (
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="w-100" id="exampleModalLongTitle">Make sure</h5>
-                    </div>
-                    <div class="modal-body">
-                      Do you really want to delete this employee ?
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onClick={props.Pass}>Delete</button>
-                    </div>
+      <Modal visible={this.state.visible}   onClickBackdrop={this.modalBackdropClicked} >
+                  <div class="modal-header">
+                    <h5 class="w-100" id="exampleModalCCompleteLongTitle">Make sure !!!</h5>
                   </div>
-                </div>
-          </div>
-    )
+                  <div class="modal-body">
+                    Do you really want to delete this Employee ?
+                  </div>
+                  <div class="modal-footer">
+                    <button className="btn btn-primary"id="cancelAlert"onClick={this.onClose}>Cancel</button>
+                    <button className="btn btn-danger" id="passButtonAlert"onClick={this.onPass} >Delete</button>
+                  </div>
+
+      </Modal>
+    );
+  }
 }
+
 
 
   

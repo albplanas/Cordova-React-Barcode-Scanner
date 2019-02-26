@@ -8,7 +8,7 @@ import WholeList from "./WholeList";
 import Sign_Print from "./../Sign_Print";
 import ListLabor from "./ListLabor";
 import {Alert} from "../../InformationCards/Alert"
-
+import SendAlert from "../../InformationCards/SendAlert"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt,faPlus,faCheckCircle, faFileSignature} from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +21,9 @@ class EmployeeRow extends Component {
             deleteIdP:"_",
             signOpen:false,
             ShowReport:[],
-            openAlert:false
+            openAlert:false,
+            smsOpen:false,
+            sms:"Something"
           }
 
 
@@ -37,6 +39,8 @@ class EmployeeRow extends Component {
 
           this.SwitchSign=this.SwitchSign.bind(this)
           this.ChngSign=this.ChngSign.bind(this)
+
+          this.closeAlert=this.closeAlert.bind(this)
      }
 
      DeleteRow(e){
@@ -44,9 +48,9 @@ class EmployeeRow extends Component {
        var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
       
        var i=FindNameEmployee(index.split("_")[1],this.props.idEmloyeeList)
-       console.log("DELECTEEEE", index,i)
+       
        this.setState({openAlert:true ,deleteId:i,deleteIdP:index.split("_")[2]-0})
-       console.log("beforeDeleet",this.state.ShowReport)
+       
     }
 
 
@@ -83,7 +87,12 @@ class EmployeeRow extends Component {
        
       }
 
-
+      closeAlert(){
+        this.setState({
+            sms:"",
+            smsOpen:false
+        })
+      }
 
      AddCtg(e){
      
@@ -91,7 +100,7 @@ class EmployeeRow extends Component {
                     var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
                            
                    if( rowChecker(this.state.ShowReport)  ){
-                    console.log("AddCtg")
+                   
                             var idName=FindNameEmployee(index.split("_")[1],this.props.idEmloyeeList)
                             
                             if(hrsChecker(this.state.ShowReport,idName)){
@@ -116,13 +125,20 @@ class EmployeeRow extends Component {
                                 
                             }
                             else{
-                                this.props.onSMS("TooMuchHours",index.split("_")[1])
+                                this.setState({
+                                    sms:"TooMuchHours",
+                                    smsOpen:true
+                                })
                             }
                             
                             
                    } 
                    else{
-                       this.props.onSMS("Complete",index.split("_")[1])
+                            this.setState({
+                                sms:"Complete",
+                                smsOpen:true
+                            })
+                       
                    }
 
 
@@ -229,7 +245,11 @@ class EmployeeRow extends Component {
 
 
         if(idName==="" || Filter.length>0){
-            this.props.onSMS("Validation Sing",idName) 
+            this.setState({
+                sms:"Validation Sing",
+                smsOpen:true
+            })
+          
         }
         else{
             this.setState({ 
@@ -281,17 +301,10 @@ class EmployeeRow extends Component {
         }
 
 
-     /*  componentWillUnmount(){
-        console.log("Unmount")
-        this.props.Update(this.state.ShowReport,this.state.ShowReport[0].idproject,this.state.ShowReport[0].idproject);
-        SetLocalReport(this.state.ShowReport)
-        
 
-          
-       } */
 
     render() {
-        console.log("StateReportRow",this.state.ShowReport)
+        
         var IDproj=this.state.ShowReport[0].idproject;
         
         //Conversion 
@@ -307,7 +320,7 @@ class EmployeeRow extends Component {
        var ByName=NameList.map(x=>FindIdEmployee(x,this.props.idEmloyeeList))
 
        var projSelect=elem.length===0 ? this.props.Project[0][1]: elem[0].idproject
-       console.log(this.props.Project[0])
+
        Employee=NameList.map(idEmp=>{
            var Categ= elem.filter(x=>x.idemployee===idEmp)
 
@@ -316,7 +329,7 @@ class EmployeeRow extends Component {
            return {name:FindIdEmployee(idEmp,this.props.idEmloyeeList), Hours:Hours,Signature:Categ[0].Signature,}
            
        })
-       console.log("wholeList")
+ 
          var arrayEmployee=Employee.map((e)=>{
 
          
@@ -393,7 +406,8 @@ class EmployeeRow extends Component {
                                       
                                 }
                                 
-                {this.state.openAlert? <Alert Pass={this.PassDelete}  />:<div/>}
+                                {   this.state.openAlert    ?    <Alert Pass={this.PassDelete} open={this.state.openAlert} />:<div/>}
+                                {   this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
                    </tr>
 
 

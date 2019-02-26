@@ -1,21 +1,8 @@
 import React,{Component} from "react";
+import { Alert,Button,Container } from 'react-bootstrap';
 
 
-
-  function SendAlert(props){
-
-      console.log("SendAlert")
-    var sms=props.info.sms===undefined?"":props.info.sms;
-    var name =props.info.name===undefined?"":props.info.name
-
-
-    var style = {
-                    display:sms.length>0?"block":"none"
-                };
-
-
-
-    function Text(name,sms,lang){
+function Text(name,sms,lang){
      
       switch(sms){
 
@@ -49,42 +36,129 @@ import React,{Component} from "react";
 
     }
 
-    function Color(name,sms){
+    function Color(sms){
 
       switch(sms){
 
         case "FullProjects":
-              return "alert-warning"
+              return "warning"
               break;
         case "done": 
-              return "alert-success";
+              return "success";
               break;
         case "Complete":    
-              return "alert-dark";
+              return "dark";
               break;
         case "Validation Sing":
-              return "alert-warning"
+              return "warning"
        
         case "Empty": 
-              return "alert-secondary" ;
+              return "secondary" ;
               break;
         case "Offline": 
-              return "alert-danger" ;
+              return "danger" ;
               break;
         case "TooMuchHours": 
-              return "alert-info" ;
+              return "info" ;
               break;
       case "SignLess":
-              return "alert-info" 
+              return "info" 
               break;    
-        default:"alert-warning"    
+        default:"warning"    
       }
 
     }
-    return ( 
+
+
+class SendAlert extends Component {
+      constructor(props) {
+        super(props);
+    
+        this.state = { 
+                        show: true,
+                        variant:"info",
+                        lang:"es"
+                  };
+      }
+    
+      componentWillMount(){
+            console.log("ALERTTTTTTSSSSSSSS",this.props)
+            this.setState({
+                  show:this.props.open,
+                  sms:this.props.sms,
+                  variant:Color(this.props.sms),
+                  lang:this.props.lang
+            })
+      }
+      componentWillReceiveProps(nextProps){
+            if(nextProps.open===true)
+            this.setState({
+                  show:nextProps.open,
+                  sms:nextProps.sms,
+                  variant:Color(nextProps.sms),
+                  lang: nextProps.lang
+            })
+      }
+      render() {
+        const handleHide = () =>{
+            this.props.close();
+            this.setState({ show: false });
+        } 
+        return (
+     
+                              <Alert show={this.state.show} style={{marginLeft:"5vw" ,width:"90vw"}} variant={this.state.variant}>
+                              <Alert.Heading><strong>{this.state.sms+" !!!"}</strong></Alert.Heading>
+                              <hr />
+                              <p>
+                                                {Text(this.state.lang,this.state.sms)}
+                              </p>
+                              <hr />
+                              <div className="d-flex justify-content-end">
+                                          <Button onClick={handleHide} variant="outline-danger">
+                                          Close
+                                          </Button>
+                                    </div>
+                              </Alert>
+    
+        );
+      }
+    }
+   /* 
+  function SendAlert(props){
+
+      console.log("SendAlert")
+    var sms=props.info.sms===undefined?"":props.info.sms;
+    var name =props.info.name===undefined?"":props.info.name
+
+
+    var style = {
+                    display:sms.length>0?"block":"none"
+                };
+
+
+
+
+
+    return (
+          <div className="container">
+                              <Alert dismissible variant="dark">
+                                                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                                                <p>
+                                                      Change this and that and try again. Duis mollis, est non commodo luctus,
+                                                      nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis
+                                                      consectetur purus sit amet fermentum.
+                                                </p>
+                              </Alert>
+               </div>               
+  )
+/* return ( 
               <div class={"alert fade show "+Color(name,sms)} role="alert" style={style}>
               <p style={{marginRight:"100px"}}><strong >{Text(name,sms,props.lang)}</strong></p>
-                <button type="button" class="close" aria-label="Close" onClick={()=>{props.clear()}} style={{width:"50px",position:"absolute",top: "10px",right:"50px"}}>
+                <button type="button" 
+                        class="close" 
+                        aria-label="Close" 
+                        onClick={()=>{props.clear()}} 
+                        style={{width:"50px",position:"absolute",top: "10px",right:"50px"}}>
                   <span aria-hidden="true"style={{fontSize:"40px"}}>&times;</span>
                 </button>
               </div>
@@ -92,5 +166,15 @@ import React,{Component} from "react";
 
   }
 
-
+*/
   export default SendAlert;
+
+
+
+
+
+
+
+
+
+

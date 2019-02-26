@@ -25,7 +25,7 @@ class ReportState extends Component {
           var daySelect=this.props.date.split(" ")[2]
 
           var ShowReport=JSON.parse(window.localStorage.getItem("OldReportsList")).filter(elem=>elem[0].date.split("-")[2]===daySelect)[0]
-          console.log("onUpdateLocalReport",ShowReport)
+         
           this.props.onUpdateLocalReport(ShowReport,this.props.date)
 
         console.log(ShowReport)

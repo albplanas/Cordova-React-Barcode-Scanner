@@ -11,7 +11,7 @@ import { faPaperPlane,faClipboardList, faBarcode} from '@fortawesome/free-solid-
 
 import CardReport from "../InformationCards/Status"
 
-
+import SendAlert from"../InformationCards/SendAlert"
 
   class Start extends Component {
   
@@ -20,13 +20,24 @@ import CardReport from "../InformationCards/Status"
       super(props);
       this.state={
         lang:"es",
-        card:false
+        card:false,
+        smsOpen:false,
+        sms:"Something"
       }
       this.Send         = this.Send.bind(this);
       this.closeCard    =this.closeCard.bind(this);
       this.Lang         =this.Lang.bind(this);
       this.CkeckStatus  =this.CkeckStatus.bind(this);
       this.Select=this.Select.bind(this);
+      this.closeAlert=this.closeAlert.bind(this)
+    }
+
+
+    closeAlert(){
+      this.setState({
+          sms:"",
+          smsOpen:false
+      })
     }
 
     Select(){
@@ -63,7 +74,12 @@ import CardReport from "../InformationCards/Status"
 
  //Send
    Send(){
+
      var sms=send();
+          this.setState({
+            sms:sms,
+            smsOpen:true
+        })
    }
 
    
@@ -126,7 +142,7 @@ import CardReport from "../InformationCards/Status"
              
       
                       <div class="form-group  ">
-                          <label class=" text-dark text-center" for="inlineFormCustomSelectSuperv"><center><p class="text-primary" style={{fontSize:"1.8rem"}}>{this.state.lang==="es"?"Seleccione el supervisor y la fecha ":"Select Supervisor and Date"}</p> </center></label>
+                          <label class=" text-dark text-center" for="inlineFormCustomSelectSuperv"><center><p class="text-dark" style={{fontSize:"1.8rem"}}>{this.state.lang==="es"?"Seleccione el supervisor y la fecha ":"Select Supervisor and Date"}</p> </center></label>
                           <select class="custom-select custom-select-lg  mb-3" id="inlineFormCustomSelectSuperv">
                               {arraySupervisor}
                           </select>
@@ -177,7 +193,7 @@ import CardReport from "../InformationCards/Status"
           
          
                         { this.state.card?<CardReport close={this.closeCard} date={arrayDate} lang={this.state.lang}/>:<div/>}
-          
+                        {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
       </div>
 
             
@@ -197,7 +213,7 @@ import CardReport from "../InformationCards/Status"
           onSelectDoor: (value) => dispatch({type: actionTypes.DOOR , value:value}),
           onSelectLanguage: (value) => dispatch({type: actionTypes.LANGUAGE , value:value}),
           onSetDay:     (value) => dispatch({type: actionTypes.SETDAY , value:value}),
-          onSMS:        (sms,name) => dispatch({type:  actionTypes.SETSMS , sms:sms,name:name})
+         
       };
   };
     export default connect(mapStateToProps,mapDispatchToProps )(Start);

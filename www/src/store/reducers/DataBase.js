@@ -22,7 +22,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.UPDATEDATABASE:
 
 
-                        console.log(action.property,action.value)
+                      
                         return {
                             ...state,
                             [action.property]:action.value
