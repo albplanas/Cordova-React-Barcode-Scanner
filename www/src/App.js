@@ -7,7 +7,7 @@ import { createStore,combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
 import globalStateReducer   from '../src/store/reducers/globalState';
-//import localStateReducer  from '../../../store/reducers/localState';
+import localStateReducer    from '../src/store/reducers/localState';
 import dataReducer          from '../src/store/reducers/DataCenter';
 import dataBaseReducer      from '../src/store/reducers/DataBase';
 
@@ -15,7 +15,7 @@ const rootReducers = combineReducers({
   globalState  : globalStateReducer,
   dataState    : dataReducer,
   dataBase     :dataBaseReducer ,
-  //localState   : localStateReducer      
+  localState   : localStateReducer      
 
 }) 
 

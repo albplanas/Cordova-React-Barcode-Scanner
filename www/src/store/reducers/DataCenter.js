@@ -4,28 +4,7 @@ const initialState = {
 
         //AssistenceReport
         ShowReport:[],
-  
-        
-
-        //Scan Report
-        data:[{
-              send:false,
-              idproject:[8,9],
-              date:"2019-03-03",
-              Supervisor:"Adrian Batista"
-            },{
-            id: 652,
-            idproject:8,
-            product:"9780444505156",
-            name:"P6",
-            amount:3
-        },{
-            id: 474,
-            idproject:9,
-            product:"062118600305",
-            name:"Table",
-            amount:7
-      }],
+        ShowScan:[],
 
       date:"",
       sms:"",
@@ -44,17 +23,67 @@ const reducer = (state = initialState, action) => {
 
                         }  
                    
- 
+        case actionTypes.UPDATELOCALSCAN:
+             
+
+                        
+
+                        if(Array.isArray(action.value) ){
+                            if(action.value.length===0){
+                                var newScanner= [{
+                                    send:false,
+                                    idproject:[8],
+                                    date:formatDate(action.date),
+                                    },{
+                                      id:Math.random()*1000000,
+                                      idproject:8,
+                                      product:"",
+                                      name:"No Scanned",
+                                      amount:0
+                                }]
+                            }
+                            else{
+                                var newScanner=action.value.map((elem)=>{return Object.assign({},elem)})
+                            }
+                        }
+                        else{
+                          
+                            {
+                                var newScanner= [{
+                                    send:false,
+                                    idproject:[8],
+                                    date:formatDate(action.date),
+                                    },{
+                                      id:Math.random()*1000000,
+                                      idproject:8,
+                                      product:"",
+                                      name:"NO Scanned",
+                                      amount:0
+                                }]
+                            }
+                        }
+                   
+    
+                  
+                            return {
+                                ...state,
+                                ShowScan:newScanner
+                            }
+
+
+
         case actionTypes.UPDATELOCALREPORT:
              
 
-                         console.log("Actions",action)
+                        console.log("updatering ",action)
+
                             if(Array.isArray(action.value) ){
                                 if(action.value.length===0){
                                     var newReport=[{
                                         send:false,
                                         idproject:[8],
                                         date:formatDate(action.date),
+                                        Supervisor:action.supervisor,
                                         materials:"",
                                         equipments:"",
                                         production:"",
@@ -69,7 +98,17 @@ const reducer = (state = initialState, action) => {
                                 }]
                                 }
                                 else{
-                                    var newReport=action.value.map((elem)=>{return Object.assign({},elem)})
+                                    var newReport=action.value.map((elem,index)=>{
+                                        return index===0? Object.assign({},{
+                                                                                send:elem.send,
+                                                                                idproject:elem.idproject,
+                                                                                date:formatDate(action.date),
+                                                                                Supervisor:action.supervisor,
+                                                                                materials:elem.materials,
+                                                                                equipments:elem.equipments,
+                                                                                production:elem.production,
+                                                                                comments:elem.comments
+                                                                            }):Object.assign({},elem)})
                                 }
                             }
                             else{
@@ -79,6 +118,7 @@ const reducer = (state = initialState, action) => {
                                                             send:false,
                                                             idproject:[8],
                                                             date:formatDate(action.date),
+                                                            Supervisor:action.supervisor,
                                                             materials:"",
                                                             equipments:"",
                                                             production:"",

@@ -28,7 +28,7 @@
       }
       
       #Log .layer {
-        background: linear-gradient(135deg,#343a40 0%, #f8f9fa 10%, #f8f9fa 30%, #868e96 50%, #868e96 70%, #343a40 90%, #343a40 100%);
+        background: linear-gradient(135deg,#343a40 0%, #f8f9fa 10%,#f8f9fa 20%, #868e96 40%, #868e96 50%, #868e96 70%, #343a40 90%, #343a40 100%);
         position: absolute;
         top: 0;
         left: 0;
@@ -40,7 +40,7 @@
  
       .login-form {
         position: absolute;
-        top:20vh;
+        top:12vh;
         left: 12.5vw;
         padding-left: -50px;
         width:75vw;

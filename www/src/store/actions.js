@@ -15,6 +15,7 @@ export const UPDATEDATABASE    =  "UPDATEDATABASE"
 
 //LocalState
 export const UPDATELOCALREPORT = "UPDATELOCALREPORT"
+export const UPDATELOCALSCAN ="UPDATELOCALSCAN"
 export const PROJCHANGE        = "PROJCHANGE"
 export const TABLECHANGE       = "TABLECHANGE"
 export const LABORCHANGE       = "LABORCHANGE"

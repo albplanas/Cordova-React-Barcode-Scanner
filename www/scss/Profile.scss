@@ -132,28 +132,7 @@ table{
 }
 
 
-#newReport .navbar{
-    position : fixed;
-    top:0;
-    width:100%;
-    z-index: 99;
-    padding-top:0px;
-    padding-bottom:0px;
-}
 
-#newReport .navbar h6{
-  margin-left:5vw;  
-  margin-top: 16px;
-  margin-bottom: auto;
-  font-family: 'Taviraj', serif;
-}
-
-#newReport .navbar .form-control{
-    width:calc(60vw - 220px);
-    height:30px;
-    padding-top:3px;
-    padding-bottom:3px;
-  }
 
 .form-inline{
     width:calc(100vw - 330px);
@@ -170,13 +149,7 @@ table{
 }
 
 
- 
- #newReport .navbar h6{
-    margin-left:10px;  
-    margin-top: 12px;
-    margin-bottom: auto;
-    font-size: 12px
-  }
+
   .form-group{
       margin-bottom: 0px;
   }
@@ -194,10 +167,7 @@ table{
   }
 
   @media (max-width: 850px){
-    #newReport .navbar .form-control{
-        width:140px;
-        
-      }
+
       .form-inline{
         width:400px;
         margin-left:0px;

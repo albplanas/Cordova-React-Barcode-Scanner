@@ -1,6 +1,7 @@
 import React,{Component} from "react";
 
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowAltCircleLeft} from '@fortawesome/free-solid-svg-icons'
 
 
 class TopPDF extends Component {
@@ -21,7 +22,7 @@ class TopPDF extends Component {
      cancel(e){
 
         e.preventDefault();
-        this.props.onSelectDoor("home")
+        this.props.onSelectDoor("start")
         
        }
 
@@ -40,11 +41,13 @@ class TopPDF extends Component {
       return(     
                     <nav class="navbar navbar-default bg-dark">
                                 <div class="container-fluid">
-                                    <div class="navbar-header">
-                                        <a class="navbar-brand" href="#" onClick={(e)=>{e.preventDefault(); this.props.cancel("home")}}>
-                                                <i class="fas fa-arrow-left text-danger fa-lg" ></i>
-                                        </a>
-                                    </div>
+                                    <a class="navbar-brand text-warning" onClick={(e)=>{e.preventDefault(); this.props.cancel("start")}} >
+                                          <FontAwesomeIcon icon={ faArrowAltCircleLeft} size={"2x"}/>
+                                            
+                                        
+                                      </a>
+                                       
+                                    
                                 </div>
 
                                

@@ -40,7 +40,7 @@ var app = {
     receivedEvent: function(id) {
         
 
-        console.log('Received Event: ' + id);
+      
 
         document.getElementById("demo").onclick = function() {
 
@@ -56,9 +56,7 @@ var app = {
            onBarCodeScanner(pars);
           
         };
-        document.getElementById("getbarcode").onclick = function() {
-                         alert("great")
-            }
+    
     }
 };
 

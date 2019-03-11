@@ -11,8 +11,6 @@ import { faPaperPlane,faClipboardList, faBarcode} from '@fortawesome/free-solid-
 
 import CardReport from "../InformationCards/Status"
 
-import SendAlert from"../InformationCards/SendAlert"
-
   class Start extends Component {
   
   
@@ -21,37 +19,30 @@ import SendAlert from"../InformationCards/SendAlert"
       this.state={
         lang:"es",
         card:false,
-        smsOpen:false,
-        sms:"Something"
       }
       this.Send         = this.Send.bind(this);
       this.closeCard    =this.closeCard.bind(this);
       this.Lang         =this.Lang.bind(this);
       this.CkeckStatus  =this.CkeckStatus.bind(this);
       this.Select=this.Select.bind(this);
-      this.closeAlert=this.closeAlert.bind(this)
     }
 
 
-    closeAlert(){
-      this.setState({
-          sms:"",
-          smsOpen:false
-      })
-    }
 
     Select(){
-         
+      
       var value={
          supervisor:        document.getElementById("inlineFormCustomSelectSuperv").value,
          date      :       document.getElementById("date").value
       }
 
-
-    
-         this.props.onSetDay(value)
         
+        window.localStorage.setItem("SupervisorEmployee",document.getElementById("inlineFormCustomSelectSuperv").value);
+         this.props.onSetDay(value)
+
   }
+
+
     CkeckStatus(){
       this.setState({ 
           card:true
@@ -74,21 +65,21 @@ import SendAlert from"../InformationCards/SendAlert"
 
  //Send
    Send(){
+    this.setState({ 
+      spinner:true
+    })
+     send(this.props.OnSETSMS);
+          
 
-     var sms=send();
-          this.setState({
-            sms:sms,
-            smsOpen:true
-        })
    }
 
    
    componentWillMount() {
 
     this.setState({ 
-      sms:this.props.sms,
-      name:this.props.name,
-      lang:this.props.lang
+      lang:       this.props.lang,
+      Supervisor: this.props.Supervisor,
+      date:       this.props.date
     })
 
   }
@@ -96,17 +87,20 @@ import SendAlert from"../InformationCards/SendAlert"
   //Update the list
  componentWillReceiveProps(nextProps) {
 
-            if(nextProps.sms!==this.state.sms || nextProps.name!==this.state.name || nextProps.lang!==this.state.lang) {
-                    this.setState({ 
+            if(nextProps.sms!==this.state.sms || nextProps.Supervisor!==this.state.Supervisor || nextProps.date!==this.state.date || nextProps.name!==this.state.name || nextProps.lang!==this.state.lang) {
+              
+              this.setState({ 
                     sms:nextProps.sms,
                     name:nextProps.name,
-                    lang:nextProps.lang
+                    lang:nextProps.lang,
+                    Supervisor:nextProps.Supervisor,
+                    date:nextProps.date
                     })
             }           
     
     }
       render() { 
-
+      
         //Supervisors
         var arraySupervisor= this.props.listSupervisor.map(elem=>{ return ( <option className="text-dark" value={elem}>{elem}</option> )})
 
@@ -119,20 +113,23 @@ import SendAlert from"../InformationCards/SendAlert"
         for(var i=0;i<8;i++){
             var Time = time-i*86400000;
             var date = new Date(Time);
-            date=date.toDateString()
+            date=date.toDateString();
             arrayDate=arrayDate.concat(date )
         }
        
        var  optionDate=arrayDate.map(elem=>{ return ( <option className="text-dark" value={elem} >{elem}</option> )})
 
-       var style ={    backgroundSize: "contain",
+       var style ={    
+                      backgroundSize: "contain",
                       backgroundImage:this.state.lang==="es"?"url('https://countryflags.io/ES/shiny/64.png')":
                                                              "url('https://countryflags.io/GB/shiny/64.png')"
                  }
+        
+                 
         return (
 
           <div id="Log" >
-                 
+                
           <section>
       
               <div class="layer"></div>
@@ -142,14 +139,14 @@ import SendAlert from"../InformationCards/SendAlert"
              
       
                       <div class="form-group  ">
-                          <label class=" text-dark text-center" for="inlineFormCustomSelectSuperv"><center><p class="text-dark" style={{fontSize:"1.8rem"}}>{this.state.lang==="es"?"Seleccione el supervisor y la fecha ":"Select Supervisor and Date"}</p> </center></label>
-                          <select class="custom-select custom-select-lg  mb-3" id="inlineFormCustomSelectSuperv">
+                          <label class=" text-dark text-center" for="inlineFormCustomSelectSuperv"><center><p class="text-dark" style={{fontSize:"1.6rem"}}>{this.state.lang==="es"?"Seleccione el supervisor y la fecha ":"Select Supervisor and Date"}</p> </center></label>
+                              <select class="custom-select custom-select-lg  mb-3" id="inlineFormCustomSelectSuperv"  value={this.state.Supervisor} onChange={this.Select} >
                               {arraySupervisor}
                           </select>
                           
-                          <select class="custom-select custom-select-lg  mb-3"  id="date" value={this.state.date} >
-                              {optionDate}
-                      </select>
+                          <select class="custom-select custom-select-lg  mb-3"  id="date" value={this.state.date} onChange={this.Select} >
+                                  {optionDate}
+                          </select>
                       
                      
       
@@ -157,7 +154,7 @@ import SendAlert from"../InformationCards/SendAlert"
                      
                      <div className="container m-auto d-flex justify-content-center" style ={{maxWidth: "300px"}} >
                               
-                               <select style={style} class="custom-select mt-2 mb-3 "  id="language"  onChange={this.Lang}>
+                               <select style={style} class="custom-select mt-2 mb-3 mt-3"  id="language" value={this.state.lang} onChange={this.Lang}>
                                         <option className="text-dark" value="es">Español</option>
                                         <option className="text-dark" value="en">English</option>
                                         
@@ -173,11 +170,16 @@ import SendAlert from"../InformationCards/SendAlert"
                                                <FontAwesomeIcon icon={faClipboardList} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"ASISTENCIA":" ASSISTENCE "}</span>
                                              </button>
                                        </div>
-                                       <div className="col-md-7 mb-3 d-flex justify-content-center">
+                                      {/**
+
+
+                                      <div className="col-md-7 mb-3 d-flex justify-content-center">
                                                <button className="btn btn-lg btn-primary mainBtns"  onClick={()=>{this.props.onSelectDoor("inventary");this.Select();}}>
                                                            <FontAwesomeIcon icon={ faBarcode} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"INVENTARIO":" INVENTARY "}</span>      
-                                                   </button>
+                                               </button>
                                        </div>
+                                      
+                                      */}
                                        <div className="col-md-7 mb-3 d-flex justify-content-center">
                                                  <button className="btn btn-lg btn-info mainBtns"  onClick={this.Send}>
                                                  <FontAwesomeIcon icon={ faPaperPlane} size={"lg"}/> <span className="ml-3">{this.state.lang==="es"?"ENVIAR":" SEND"}</span>  
@@ -186,15 +188,14 @@ import SendAlert from"../InformationCards/SendAlert"
                 
                              </div>
          
-         
+                             <img id="Pict" src=""/> 
                         </div>
               </div>
           </section>
           
          
                         { this.state.card?<CardReport close={this.closeCard} date={arrayDate} lang={this.state.lang}/>:<div/>}
-                        {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
-      </div>
+                              </div>
 
             
         )}
@@ -203,9 +204,11 @@ import SendAlert from"../InformationCards/SendAlert"
     const mapStateToProps = state => {
         
       return {
-          door      :state.globalState.door,
-          lang      :state.globalState.lang,
-          listSupervisor:state.dataBase.Supervisor
+          door            :state.globalState.door,
+          lang            :state.globalState.lang,
+          Supervisor      :state.globalState.supervisorSelect,
+          date            :state.globalState.dateSelect,
+          listSupervisor  :state.dataBase.Supervisor
       };
     };
    const mapDispatchToProps = dispatch => {
@@ -213,7 +216,7 @@ import SendAlert from"../InformationCards/SendAlert"
           onSelectDoor: (value) => dispatch({type: actionTypes.DOOR , value:value}),
           onSelectLanguage: (value) => dispatch({type: actionTypes.LANGUAGE , value:value}),
           onSetDay:     (value) => dispatch({type: actionTypes.SETDAY , value:value}),
-         
+          OnSETSMS:         (value) => dispatch({type: actionTypes.SETSMS, sms:value})
       };
   };
     export default connect(mapStateToProps,mapDispatchToProps )(Start);

@@ -7,9 +7,9 @@ import {SetLocalReport} from "./../../../Helper/setLocalStorage"
 import {rowChecker} from     "./../../../Helper/Validation"
 import {CompareObjects} from "./../../../Helper/Conversor"
 import Table from "./Table";
-import {AlertDeleteFull} from "../../InformationCards/Alert"
+import {Alert} from "../../InformationCards/Alert"
 
-import SendAlert from"../../InformationCards/SendAlert"
+
 
 
 class TableCenter extends Component {
@@ -17,20 +17,24 @@ class TableCenter extends Component {
         super(props);
        this.state={
         deleteId:"_",
-        openAlert:false,
-        smsOpen:false,
-        sms:"Something"
+        openAlert:false
        }
         this.onUpdate= this.onUpdate.bind(this);
         this.deleteWholeProject=this.deleteWholeProject.bind(this);
         this.AddProject= this.AddProject.bind(this);
-        this.closeAlert=this.closeAlert.bind(this)
+        this.closeAlert               =this.closeAlert.bind(this)
      }
+
+
+     closeAlert(){
+        this.setState({openAlert:false,deleteId:"_",deleteIdP:"_"})
+    }
+
 
      onUpdate(report,id,ProjChange){
 
 
-        console.log("Update",report,id,ProjChange)
+      
 
         var newShowReport=this.state.ShowReport.filter(elem=> elem.idproject!==ProjChange)
         newShowReport=newShowReport.concat(report.slice(1,report.length))
@@ -45,9 +49,9 @@ class TableCenter extends Component {
         }
 
 
-        console.log("newShowReport",newShowReport)
 
-        this.props.onUpdateLocal(newShowReport);
+        this.props.onUpdateLocal(newShowReport,this.state.date,this.state.Supervisor,);
+        console.log("onUpdate",newShowReport)
         SetLocalReport(newShowReport)
         this.setState({
             ShowReport:newShowReport
@@ -71,7 +75,7 @@ class TableCenter extends Component {
                 if(ProjetsAvailable.length>0){
 
                             var newShowReport=this.state.ShowReport;
-                            
+                            console.log(this.state.ShowReport)
                             newShowReport[0].idproject.push(ProjetsAvailable[0][1])
             
                             newShowReport.push({
@@ -84,7 +88,7 @@ class TableCenter extends Component {
                             })
             
                             //Update
-                            this.props.onUpdateLocal(newShowReport);
+                            this.props.onUpdateLocal(newShowReport,this.state.date,this.state.Supervisor);
                             SetLocalReport(newShowReport)
                             this.setState({
                                 ShowReport:newShowReport
@@ -94,21 +98,14 @@ class TableCenter extends Component {
                 }
 
                 else{
-                    this.setState({
-                        sms:"FullProjects",
-                        smsOpen:true
-                    })
-                    
+                  
+                    this.props.OnSETSMS("FullProjects") 
                 }
               
             }
 
             else{
-                this.setState({
-                    sms:"Complete",
-                    smsOpen:true
-                })
-                
+                this.props.OnSETSMS("Complete") 
             }
 
             
@@ -120,12 +117,7 @@ class TableCenter extends Component {
        this.setState({openAlert:true ,deleteId:id})
        
     }
-    closeAlert(){
-        this.setState({
-            sms:"",
-            smsOpen:false
-        })
-      }
+
 
 
      deleteWholeProject(){
@@ -149,7 +141,9 @@ class TableCenter extends Component {
    
         
         
-        this.props.onUpdateLocal(newShowReport);
+        this.props.onUpdateLocal(newShowReport,this.state.date,this.state.Supervisor);
+
+
         SetLocalReport( newShowReport)
         this.setState({
             deleteId:"_",
@@ -162,6 +156,7 @@ class TableCenter extends Component {
         this.setState({ 
             ShowReport:this.props.ShowReport,
             date:this.props.date,
+            Supervisor:this.props.Supervisor,
             lang:this.props.lang
           })
 
@@ -169,9 +164,16 @@ class TableCenter extends Component {
     
       //Update the list
      componentWillReceiveProps(nextProps) {
-        if( !CompareObjects(nextProps.ShowReport,this.state.ShowReport) || this.state.lang!== nextProps.lang) {
+        if( !CompareObjects(
+                            nextProps.ShowReport,
+                            this.state.ShowReport) || this.state.lang!== nextProps.lang) {
                 
-            this.setState({   ShowReport:nextProps.ShowReport,date:this.props.date,lang:nextProps.lang  })
+            this.setState({   
+                                ShowReport:nextProps.ShowReport,
+                                date:this.props.date,
+                                lang:nextProps.lang,
+                                Supervisor:nextProps.Supervisor,  
+                            })
         } 
 
         }
@@ -199,10 +201,11 @@ class TableCenter extends Component {
             TablesbyProjects.push(<Table 
                                             lang={this.props.lang} 
                                             date={this.props.date} 
+                                            Supervisor={this.props.Supervisor} 
                                             Project={this.props.Project} 
                                             report={projectsReport} 
                                             Update={(report,newID,ProjChange)=>{this.onUpdate(report,newID,ProjChange)}}  
-                                           
+                                            OnSETSMS={(sms)=>this.props.OnSETSMS(sms)}
                                             OldReports={this.props.OldReports}
                                             WholeList = {this.props.WholeList}
                                             idEmloyeeList={this.props.idEmloyeeList}
@@ -224,9 +227,12 @@ class TableCenter extends Component {
                   
                     </div>
                   <hr/>
-                  {this.state.openAlert? <AlertDeleteFull  Pass={this.deleteWholeProject}  />:<div/>}
-                  {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
-       </div>
+                  {this.state.openAlert? <Alert 
+                                                    Pass={this.deleteWholeProject} 
+                                                    open={this.state.openAlert}  
+                                                    Close={this.closeAlert} 
+                                                    text="full" />:<div/>}
+                    </div>
         )
     }
   }
@@ -237,6 +243,7 @@ class TableCenter extends Component {
 
         ShowReport: state.dataState.ShowReport,
         date:state.globalState.dateSelect,
+        Supervisor:state.globalState.supervisorSelect,
         lang:state.globalState.lang,
         
 
@@ -255,7 +262,8 @@ class TableCenter extends Component {
   };
  const mapDispatchToProps = dispatch => {
     return {
-      onUpdateLocal: (value) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value})
+      onUpdateLocal:    (value,date,supervisor) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value, date:date ,supervisor:supervisor}),
+      OnSETSMS:         (value) => dispatch({type: actionTypes.SETSMS, sms:value})
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps)(TableCenter);

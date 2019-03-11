@@ -9,18 +9,11 @@ import {SetLocalReport} from "../../../Helper/setLocalStorage"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus,faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 
-import SendAlert from"../../InformationCards/SendAlert"
-
 class Table extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            smsOpen:false,
-            sms:"Something"
-           }
         
           this.AddRow          =this.AddRow.bind(this);
-          this.closeAlert=this.closeAlert.bind(this)
           this.chooseProject        = this.chooseProject.bind(this)
      }
      chooseProject(e){
@@ -44,14 +37,9 @@ class Table extends Component {
       }
 
 
-      closeAlert(){
-        this.setState({
-            sms:"",
-            smsOpen:false
-        })
-      }
+      
      AddRow(e){
-            e.preventDefault();
+
         if( rowChecker(this.state.ShowReport) ){
 
                     var elem = {
@@ -66,6 +54,7 @@ class Table extends Component {
                         send:false,
                         idproject:[8],
                         date:this.props.date,
+                        Supervisor:this.props.Supervisor,
                         materials:"Some materials",
                         equipments:"Some equipments",
                         production:"Something else",
@@ -81,10 +70,8 @@ class Table extends Component {
 
         }
         else{
-            this.setState({
-                sms:"Complete",
-                smsOpen:true
-            })
+            this.props.OnSETSMS("Complete") 
+          
         }
     }
         
@@ -112,16 +99,18 @@ class Table extends Component {
         var arrayProject =this.props.Project.map((elem)=>{
             
             return ( <option className={this.props.usedProj.indexOf(elem[1])===-1?"":"text-secondary disabled"} 
-                             id={"proj_"+elem[1]}  
+                             id={"proj_"+elem[1]} 
+                             disabled= {this.props.usedProj.indexOf(elem[1])===-1?false:true}
                              value={elem[1]} >
                              {elem[0]+"/"+elem[2]}
                     </option> )
         }) ;
         
-        console.log("Table",this.state.ShowReport,this.props.Project)
+
         var id      =this.state.ShowReport.length>0?this.state.ShowReport[1].idproject:this.props.Project[0][1];
 
- 
+
+
       return(     
       <div style={{margin:"20px",marginTop:"60px"}}>  
                 <div className="container row mb-4">
@@ -170,7 +159,7 @@ class Table extends Component {
                                                  Project={this.props.Project} 
                                                  ShowReport={this.state.ShowReport} 
                                                  Update={(report,newID,ProjChange)=>{this.props.Update(report,newID,ProjChange)}}  
-                                                
+                                                 OnSETSMS={(sms)=>this.props.OnSETSMS(sms)}
                                                  OldReports={this.props.OldReports}
                                                  WholeList = {this.props.WholeList}
                                                  idEmloyeeList={this.props.idEmloyeeList}
@@ -180,9 +169,8 @@ class Table extends Component {
                                     </tbody>
                                     </table>
             
-                    </div>
-                    {this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
-         </div>  
+                                </div>
+                    </div>  
         )
     }
   }

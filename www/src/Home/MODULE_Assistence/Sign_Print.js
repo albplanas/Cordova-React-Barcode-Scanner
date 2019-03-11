@@ -43,7 +43,7 @@ componentWillReceiveProps(nextProps){
     
        
        var name= this.props.name;
-  console.log("Signature")
+
         return     (
             
             <div class="Signpad" >
@@ -55,7 +55,10 @@ componentWillReceiveProps(nextProps){
                                     <SignatureCanvas penColor='green' canvasProps={{width: 750, height: 300, className: 'sigCanvas' ,id:name }} ref={(ref) => { this.sigCanvas = ref }} />
                                     <div class="btn-group btn-block  " style={{marginLeft:"25%",height:"40px",width:"200px"}} role="group" aria-label="Basic example">
                                         <button id="clear" style={{height:"40px"}} type="button" class="btn btn-light text-danger" onClick={(e)=>{e.preventDefault()  ;this.sigCanvas.clear()}}>Clear</button>
-                                        <button id="done"  style={{height:"40px"}} type="button" class="btn btn-dark  text-success" onClick={(e)=>{e.preventDefault()  ;this.props.done(this.sigCanvas.toData(),this.state.name,this.PNG())}}>Done</button>
+                                        <button id="done"  style={{height:"40px"}} type="button" class="btn btn-dark  text-success" onClick={(e)=>{e.preventDefault()  ;
+                                                                                                                                      
+                                                                                                                                    this.props.done(this.sigCanvas.toData(),this.state.name,this.PNG())}}>
+                                                                                                                                    Done</button>
                                     </div>
                                 
                                    

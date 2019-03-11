@@ -1,47 +1,25 @@
-function SetLocalStorage(IdInventary){//IdEmployee,Projects,Supervisor,OldReportsList,newIdLabor,IdInventary) {
-
-                
-
-              /*  var StringnewIdLabor= JSON.stringify(newIdLabor);
-                window.localStorage.setItem('IdLabor',StringnewIdLabor);
-               
-                var StringOldReportsList= JSON.stringify(OldReportsList);
-                window.localStorage.setItem('OldReportsList',StringOldReportsList); 
-
-                var StringSupervisor= JSON.stringify(Supervisor);
-                window.localStorage.setItem('IdSupervisor',StringSupervisor);
-
-                var StringProjects= JSON.stringify(Projects);
-                window.localStorage.setItem('IdProject',StringProjects);
 
 
-                var StringIdEmployee= JSON.stringify(IdEmployee);
-                window.localStorage.setItem('IdEmployee',StringIdEmployee);
-              */
-                var StringIdInventary= JSON.stringify(IdInventary);
-                window.localStorage.setItem('IdInventary',StringIdInventary);
-  }
-
-  function SetLocalReport(DR){
+  function SetLocalScan(INV){
     
-    if(DR.length>0 && Array.isArray(DR[0].idproject)){
-      console.log("SeTLocal",DR)
-          var Store = JSON.parse( window.localStorage.getItem('OldReportsList'))
-          var dateDR=Date.parse(DR[0].date);
+    if(INV.length>0 && Array.isArray(INV[0].idproject)){
+      
+          var Store = JSON.parse( window.localStorage.getItem('OldScannerList'))
+          var dateINV=Date.parse(INV[0].date);
           
           var NewStore=Store.map((elem,index) => {
 
                   var dateSt=Date.parse(elem[0].date);
                   
-                  return dateSt===dateDR ? DR : elem;
+                  return dateSt===dateINV ? INV : elem;
           });
 
 
           
-          if(NewStore.filter(elem =>Date.parse(elem[0].date)===dateDR ).length===0){
+          if(NewStore.filter(elem =>Date.parse(elem[0].date)===dateINV ).length===0){
                           var index=NewStore.length;
                             for(var i in NewStore) {
-                               if(Date.parse(NewStore[i][1].date)>dateDR){
+                               if(Date.parse(NewStore[i][1].date)>dateINV){
                                  index=i;
                                  break;
                                }
@@ -51,27 +29,27 @@ function SetLocalStorage(IdInventary){//IdEmployee,Projects,Supervisor,OldReport
                           if(index===NewStore.length){
 
                             var newF=NewStore;
-                            newF=newF.concat([DR])
+                            newF=newF.concat([INV])
                             
                           }
                           else if(index===0){
                          
-                            var newF=DR;
+                            var newF=INV;
                             newF=newF.concat(NewStore)  
                           }
                           else{
                            
                             var newF=NewStore.slice(0,index)
-                                newF=newF.concat([DR]);
+                                newF=newF.concat([INV]);
                                 newF=newF.concat(NewStore.slice(index))
                           }
                             
                             
-                             window.localStorage.setItem('OldReportsList',JSON.stringify(newF.length>8?newF.slice(1):newF));
+                             window.localStorage.setItem('OldScannerList',JSON.stringify(newF.length>8?newF.slice(1):newF));
           }
           else{
           
-            window.localStorage.setItem('OldReportsList',JSON.stringify(NewStore));
+            window.localStorage.setItem('OldScannerList',JSON.stringify(NewStore));
           }
           
     }
@@ -79,7 +57,29 @@ function SetLocalStorage(IdInventary){//IdEmployee,Projects,Supervisor,OldReport
 
   }
 
+
+
+  function SetLocalReport(DR){
+    
+    if(DR.length>0 && Array.isArray(DR[0].idproject)){
+      
+          var Store = JSON.parse( window.localStorage.getItem('OldReportsList'))
+          var dateDR=Date.parse(DR[0].date);
+        
+
+          var NewStore=Store.filter(elem => Date.parse(elem[0].date) !==dateDR).concat([DR]) ;
+          
+          var SortNewStore=NewStore.sort((a, b) => (Date.parse(a[0].date) > Date.parse(b[0].date)) ? 1 : -1)
+          SortNewStore = SortNewStore.length>8?SortNewStore.slice(1,9):SortNewStore
+          console.log("SortNewStore",SortNewStore)
+          window.localStorage.setItem('OldReportsList',JSON.stringify(SortNewStore));
+          
+    }
+   
+
+  }
+
   export {
-      SetLocalStorage as SetLocalStorage,
-      SetLocalReport as SetLocalReport
+      SetLocalReport as SetLocalReport,
+      SetLocalScan   as  SetLocalScan
   }

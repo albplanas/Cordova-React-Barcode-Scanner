@@ -57,7 +57,7 @@ function CompareObjects(a,b){
 }
 
 function InventaryName(id , table){
-    console.log(id,table)
+ 
      var name=table.filter(ele=>ele[0]+""===id+"")
      return name.length===0? "Unknown":name
 }

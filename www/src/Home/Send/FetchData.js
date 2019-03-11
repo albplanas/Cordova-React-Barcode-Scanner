@@ -6,7 +6,7 @@ export default function FetchData(query) {
             
         var online = navigator.onLine;
         var messenger=[];
-console.log("Fetch data")
+
 
 //Fetch Data
         if(online){
@@ -14,8 +14,7 @@ console.log("Fetch data")
                                                     .then((response)=> {
                                                         
                                                             var  newId =response.data.map(elem=>{return [elem.Code,elem.Name] })
-                                                            
-                                                            console.log(newId)
+                                                         
                                                             var StringnewId= JSON.stringify(newId);
                                                             window.localStorage.setItem("Id"+query,StringnewId);
                                                             messenger.push("Back up finished")

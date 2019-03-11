@@ -3,7 +3,7 @@ var  signChecker = array => array.filter(e=>e.Signature.length===0).length===0?t
 
 
 var rowChecker= array => {
-    console.log(array)
+   
     return array.filter(e=> e.idemployee==="" || e.idlabor==="" || e.hrs==="").length===0?true:false
 }
 
@@ -20,7 +20,7 @@ var hrsChecker= (array,idName) => {
 }
 
 var readyToSend=(report)=>{
-   console.log("Valuated",report)
+   
     var value=true;
     if(report.length<2){
         value=false;

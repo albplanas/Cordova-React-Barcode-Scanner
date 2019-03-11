@@ -8,7 +8,6 @@ import WholeList from "./WholeList";
 import Sign_Print from "./../Sign_Print";
 import ListLabor from "./ListLabor";
 import {Alert} from "../../InformationCards/Alert"
-import SendAlert from "../../InformationCards/SendAlert"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt,faPlus,faCheckCircle, faFileSignature} from '@fortawesome/free-solid-svg-icons'
@@ -22,8 +21,7 @@ class EmployeeRow extends Component {
             signOpen:false,
             ShowReport:[],
             openAlert:false,
-            smsOpen:false,
-            sms:"Something"
+            openAlertMaster:false,
           }
 
 
@@ -39,24 +37,27 @@ class EmployeeRow extends Component {
 
           this.SwitchSign=this.SwitchSign.bind(this)
           this.ChngSign=this.ChngSign.bind(this)
-
           this.closeAlert=this.closeAlert.bind(this)
+
      }
 
      DeleteRow(e){
         e.preventDefault();
+        console.log("delete ROw")
        var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
       
        var i=FindNameEmployee(index.split("_")[1],this.props.idEmloyeeList)
        
-       this.setState({openAlert:true ,deleteId:i,deleteIdP:index.split("_")[2]-0})
+       this.setState({openAlertMaster:true ,deleteId:i,deleteIdP:index.split("_")[2]-0})
        
     }
-
+    closeAlert(){
+        this.setState({openAlertMaster:false,deleteId:"_",deleteIdP:"_"})
+    }
 
     PassDelete(){
 
-        console.log("PAssDelete")
+
 
         var i= this.state.deleteId;
         var j=this.state.deleteIdP;
@@ -66,6 +67,7 @@ class EmployeeRow extends Component {
                                                 send:false,
                                                 idproject:this.state.ShowReport[0].idproject,
                                                 date:this.state.ShowReport[0].date,
+                                                Supervisor:this.state.ShowReport[0].Supervisor,
                                                 materials:"Some materials",
                                                 equipments:"Some equipments",
                                                 production:"Something else",
@@ -82,23 +84,17 @@ class EmployeeRow extends Component {
             this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
           
             
-            this.setState({openAlert:false,deleteId:"_",deleteIdP:"_"})
+            this.setState({openAlertMaster:false,deleteId:"_",deleteIdP:"_"})
 
        
       }
 
-      closeAlert(){
-        this.setState({
-            sms:"",
-            smsOpen:false
-        })
-      }
-
+     
      AddCtg(e){
      
                     e.preventDefault();
                     var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
-                           
+                    this.setState({openAlert:false,deleteId:"_",deleteIdP:"_"})   
                    if( rowChecker(this.state.ShowReport)  ){
                    
                             var idName=FindNameEmployee(index.split("_")[1],this.props.idEmloyeeList)
@@ -125,19 +121,15 @@ class EmployeeRow extends Component {
                                 
                             }
                             else{
-                                this.setState({
-                                    sms:"TooMuchHours",
-                                    smsOpen:true
-                                })
+                                this.props.OnSETSMS("TooMuchHours")
+                                
                             }
                             
                             
                    } 
                    else{
-                            this.setState({
-                                sms:"Complete",
-                                smsOpen:true
-                            })
+                    this.props.OnSETSMS("Complete")
+                           
                        
                    }
 
@@ -148,15 +140,15 @@ class EmployeeRow extends Component {
 
       deleteCtg(e){
     
-    
+      
         e.preventDefault();
         var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
         var id= index.split("_")[1]-0
-        console.log("CtgDelete")
+       
 
        var Newest=this.state.ShowReport.filter(e=> e.id!==id);
        if(Newest.length>1){this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject)}
-      
+       this.setState({openAlert:false,deleteId:"_",deleteIdP:"_"})
     }
 
      onChangeSelectName(e){
@@ -171,7 +163,7 @@ class EmployeeRow extends Component {
                                 if(elem.idemployee===nameBefore){elem.idemployee=nameAfter}
                     
                             })
-                            console.log("ChangeName")
+              console.log("Report Before",Newest)            
            this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
            
         }
@@ -197,7 +189,7 @@ class EmployeeRow extends Component {
                         }
                         
                     })
-                    console.log("ChangeLabor")
+                   
                     this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
                   
                 }
@@ -219,7 +211,7 @@ class EmployeeRow extends Component {
                     elem.hrs=hr;
                 }
             })
-            console.log("ChangeHrs")
+          
             this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
          
         }
@@ -245,11 +237,8 @@ class EmployeeRow extends Component {
 
 
         if(idName==="" || Filter.length>0){
-            this.setState({
-                sms:"Validation Sing",
-                smsOpen:true
-            })
-          
+            this.props.OnSETSMS("Validation Sing")
+
         }
         else{
             this.setState({ 
@@ -264,7 +253,7 @@ class EmployeeRow extends Component {
     SwitchSign(data,name,png){
 
 
-            
+     
             var Newest=this.state.ShowReport.map((elem,index)=>{
                     var newElem= Object.assign({},elem);
                     if(index>0){newElem.Signature = newElem.idemployee+''===this.state.signName+"" ? data.length>0? png :newElem.Signature:newElem.Signature }
@@ -276,7 +265,7 @@ class EmployeeRow extends Component {
                 signOpen:!this.state.signOpen,
                 signName:   10000000000          
             })
-            console.log("ChangeSign")
+           
             this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
             
     }
@@ -304,9 +293,9 @@ class EmployeeRow extends Component {
 
 
     render() {
-        
-        var IDproj=this.state.ShowReport[0].idproject;
-        
+       console.log(" this.state.openAlertMaster",this.state.openAlertMaster) 
+        var IDproj=this.state.ShowReport[1].idproject;
+       
         //Conversion 
         var Employee=[];
         var NameList=[];
@@ -358,6 +347,7 @@ class EmployeeRow extends Component {
                                                                     IDproj={IDproj} 
                                                                     WholeList={this.props.WholeList} 
                                                                     NameList={ByName} 
+                                                                    Supervisor={this.state.ShowReport[0].Supervisor}
                                                                     elem={e}/> }
                                     </select>
                                 }
@@ -369,7 +359,17 @@ class EmployeeRow extends Component {
                                     <td >
                                             <table class={e.Signature.length>0 ? "table":"table table-striped"}>
                                             <tbody>
-                                               { <ListLabor IDproj={IDproj} lang={this.state.lang}  elem={e} id={e.Hours[2]} idLaborList={this.props.idLaborList} idEmloyeeList={this.props.idEmloyeeList} Project={this.props.Project} projSelect={projSelect}  onChangeSelectHour={this.onChangeSelectHour} onChangeSelectLabor={this.onChangeSelectLabor} deleteCtg={this.deleteCtg} /> } 
+                                               { <ListLabor 
+                                                                IDproj={IDproj} 
+                                                                lang={this.state.lang}  
+                                                                elem={e} id={e.Hours[2]} 
+                                                                idLaborList={this.props.idLaborList} 
+                                                                idEmloyeeList={this.props.idEmloyeeList} 
+                                                                Project={this.props.Project} 
+                                                                projSelect={projSelect}  
+                                                                onChangeSelectHour={this.onChangeSelectHour} 
+                                                                onChangeSelectLabor={this.onChangeSelectLabor} 
+                                                                deleteCtg={this.deleteCtg} /> } 
                                             </tbody>
                                         </table> 
                                     </td>
@@ -406,9 +406,12 @@ class EmployeeRow extends Component {
                                       
                                 }
                                 
-                                {   this.state.openAlert    ?    <Alert Pass={this.PassDelete} open={this.state.openAlert} />:<div/>}
-                                {   this.state.smsOpen    ?     <SendAlert open={this.state.smsOpen} lang={this.state.lang} close={this.closeAlert}sms={this.state.sms}/>:<div/>}
-                   </tr>
+                                {  this.state.openAlertMaster ?    <Alert   
+                                                                                Pass={this.PassDelete} 
+                                                                                Close={this.closeAlert} 
+                                                                                text="employee" 
+                                                                                open={this.state.openAlertMaster} />:<div/>}
+                                   </tr>
 
 
                   )})

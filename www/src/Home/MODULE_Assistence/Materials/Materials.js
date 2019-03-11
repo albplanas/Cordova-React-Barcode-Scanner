@@ -6,6 +6,13 @@ import * as actionTypes from '../../../store/actions';
 import {CompareObjects} from "./../../../Helper/Conversor"
 import {SetLocalReport} from "./../../../Helper/setLocalStorage"
 
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera} from '@fortawesome/free-solid-svg-icons'
+
+
+import CameraReport from "./CameraReport"
+
 class Materials extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +31,7 @@ class Materials extends Component {
         e.preventDefault();
         var id=e.target.id;
         var newShowReport = this.state.ShowReport;
+        console.log("this.state.ShowReport",this.state.ShowReport)
         newShowReport[0]=Object.assign({},this.state.ShowReport[0]);
         newShowReport[0][id]=document.getElementById(id).value;
       
@@ -31,7 +39,7 @@ class Materials extends Component {
                 ShowReport:newShowReport
               })
 
-              this.props.onUpdateLocal(newShowReport);
+              console.log("newShowReport",newShowReport)
               SetLocalReport(newShowReport)
 
      }
@@ -55,6 +63,7 @@ class Materials extends Component {
 
     render() {
   
+       
 
         return (
             <div class="container mt-5 mb-5">
@@ -71,10 +80,24 @@ class Materials extends Component {
                     <label for="production">{this.state.lang==="es"?"Produccion":"Production"}</label>
                     <textarea class="form-control" id="production" rows="5" value={this.state.ShowReport[0].production} onChange={this.onChange} placeholder="Describe our production today ... "></textarea>
                 </div>
+              
+                
                 <div class="form-group mb-3">
                     <label for="comments">{this.state.lang==="es"?"Comentarios y utiles dañados":"Comments and Utility Damage"}</label>
                     <textarea class="form-control" id="comments" rows="5" value={this.state.ShowReport[0].comments} onChange={this.onChange} placeholder="Comment something else there ... "></textarea>
+               
                 </div>
+
+                
+
+             <CameraReport  date={this.state.ShowReport[0].date} 
+                            supervisor={this.state.ShowReport[0].Supervisor} 
+                            projectsList={this.state.ShowReport[0].idproject}
+                            Projects={this.props.Project}
+                            /> 
+                
+                                          
+              
             </div>
         )
 
@@ -87,12 +110,15 @@ class Materials extends Component {
 const mapStateToProps = state => {
         return {
             ShowReport: state.dataState.ShowReport,
-            lang:state.globalState.lang
+            date      :state.globalState.dateSelect,
+            supervisor:state.globalState.supervisorSelect,
+            lang:state.globalState.lang,
+            Project   : state.dataBase.Project
         };
       };
      const mapDispatchToProps = dispatch => {
         return {
-          onUpdateLocal: (value) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value}),
+          onUpdateLocal:  (value,date,supervisor) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value, date:date ,supervisor:supervisor}),
 
         };
     };

@@ -23,7 +23,6 @@ function Editable(props){
 
 
 
-      console.log("Editable",props)
 
    //Hours
    var hrs=[];
@@ -53,8 +52,8 @@ function Editable(props){
                  var ArrayHrs= hrs.slice(0,cant).map((elem,index)=>{ 
                    return ( <option className="text-dark" id={"lar_"+id+"_hr"+"_"+props.IDproj} value={elem}>{elem}</option> )
                    })
-               
-                  var newarrayCategories=props.idLaborList.map(elem=>elem[1]).sort().map(eCTG=>{
+                  
+                  var newarrayCategories=props.idLaborList.filter(ELEM => ELEM[2]+""===props.IDproj+"").map(elem=>elem[1]).sort().map(eCTG=>{
 
                         return     JobsList.indexOf(eCTG)!==-1? 
                                                                   ( <option className="text-muted disabled"  
@@ -108,7 +107,7 @@ function Editable(props){
                
                
    )})
-  console.log("KOKE")
+
    return ListLabor
 }
 
@@ -118,6 +117,7 @@ function ListLabor(props){
       return props.elem.Signature.length>0?
                                                 <NoEditable elem={props.elem}/>:
                                                 <Editable 
+                                                                  IDproj={props.IDproj}
                                                                   lang={props.lang} 
                                                                   elem={props.elem} 
                                                                   id={props.id} 

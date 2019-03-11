@@ -2,12 +2,12 @@ import React,{Component} from "react";
 import { connect } from 'react-redux';
 import axios from "axios"
 import Start from "./Start/Start";
-import ProductsReportCenter from  "./MODULE_Inventary/ProductsReportCenter";
+import ScanState from  "./MODULE_Inventary/ScanState";
 import ReportState from           "./MODULE_Assistence/ReportState"
 
 import * as actionTypes from "../store/actions" 
 
-
+import SendAlert from "./InformationCards/SendAlert"
 
 
 
@@ -23,13 +23,50 @@ class Home extends Component {
 
     GetStared(query){
         if(window.localStorage.getItem(query)===null){ 
-            console.log("isNull");
-            if(query==="OldReportsList"){
+            if(query==="OldScannerList"){
+              var OldScannerList=[
+                [{
+                            send:false,
+                            idproject:[8,9],
+                            date:"2019-02-21"
+                            },{
+                              id:Math.random()*1000000,
+                              idproject:8,
+                              product:"9780444505156",
+                              name:"P6",
+                              amount:3
+                        },{
+                          id:Math.random()*1000000,
+                          idproject:9,
+                          product:"9780444505156",
+                          name:"P6",
+                          amount:3
+                        }],[
+                        {
+                        send:false,
+                        idproject:[8],
+                        date:"2019-02-20",
+                        },{
+                          id:Math.random()*1000000,
+                          idproject:8,
+                          product:"9780444505156",
+                          name:"P6",
+                          amount:3
+                    }]
+
+                ];
+window.localStorage.setItem(query,JSON.stringify( OldScannerList));
+
+
+this.props.onUpdateDataBase(query, OldScannerList)
+            }
+            else if(query==="OldReportsList"){
                 var OldReportsList=[
                                         [{
                                                     send:false,
                                                     idproject:[8,9],
                                                     date:"2019-02-21",
+                                                    Supervisor:"Armando Yorca",
                                                     materials:"Some materials",
                                                     equipments:"Some equipments",
                                                     production:"Something else",
@@ -54,6 +91,7 @@ class Home extends Component {
                                                 send:false,
                                                 idproject:[8],
                                                 date:"2019-02-20",
+                                                Supervisor:"Pablo Orta",
                                                 materials:"Some materials",
                                                 equipments:"Some equipments",
                                                 production:"Something else",
@@ -78,12 +116,14 @@ class Home extends Component {
                             .then((response)=> {
                                 
                                   if(query==="Supervisor"){
-                                    var  newId  =  [
-                                      "Armando Yorca",
-                                      "Ramon",
+                                  
+                                    var  newId  = [
+                                      "Armando Llorca",
+                                      "Ramon Crespo",
                                       "Jose Perez",
+                                      "Jorge L. Perez",
                                       "Pablo Orta",
-                                      "HectorParedes",
+                                      "Hector Paredes",
                                       "Juan Carlos Rodriguez"
                                   ];
                                   }
@@ -91,13 +131,15 @@ class Home extends Component {
                                     var  newId =response.data.map(elem=>{return [elem.Code,elem.Name] })
                                   }
                                   else if(query==="Labor"){
-                                    var  newId =response.data.map(elem=>{return [elem.idLabor,elem.labor] })
+                                 
+                                    var  newId =response.data.map(elem=>{return [elem.idLabor,elem.labor,elem.idProject] })
                                   }
                                   else if(query==="Project"){
                                     var newId =response.data.map(elem=>{return [elem.projectcode,elem.idProject,elem.projectname,elem.projectlocation]});
 
                                   }
                                   else if(query==="Employee"){
+                                    
                                     var newId =response.data.map(elem=>{return [elem.Employee,elem.IdEmployee]})
                                   }
                                  
@@ -122,18 +164,34 @@ class Home extends Component {
         }
       }
     componentWillMount(){
-    
-      window.localStorage.clear();    
-  
+    //console.log(window.localStorage)
+
+      //window.localStorage.clear();    
+      
       this.GetStared("Inventory");
       this.GetStared("Supervisor");
       this.GetStared("Employee");
       this.GetStared("Project");
       this.GetStared("Labor");
       this.GetStared("OldReportsList"); 
+      this.GetStared("OldScannerList");
 
+
+      var time = new Date().getTime();
+
+          
+          var dates = new Date(time);
+          dates=dates.toDateString();
+         
+   
+      this.props.onSetDay({
+                                supervisor:        window.localStorage.getItem("SupervisorEmployee")===null?"":window.localStorage.getItem("SupervisorEmployee"),
+                                date      :         dates
+                            })
+    
       }
- 
+      
+      
    
 
     render() { 
@@ -143,11 +201,10 @@ class Home extends Component {
              
                 {   
                     this.props.door === "start"  ?    <Start/> :
-                    this.props.door === "inventary"?  <ProductsReportCenter />:
-                    this.props.door === "assistence"? <ReportState />:
-                                                           <div/>
+                    this.props.door === "inventary"?  <ScanState/>:
+                    this.props.door === "assistence"? <ReportState />:<div/>
                  }
-
+              <SendAlert/>
             </div>
       )}
   }
@@ -163,6 +220,7 @@ class Home extends Component {
     return {
         onSelectDoor: (value) => dispatch({type: actionTypes.DOOR , value:value}),
         onUpdateDataBase : (property,value) => dispatch({type: actionTypes.UPDATEDATABASE ,property:property,value:value}),
+        onSetDay:     (value) => dispatch({type: actionTypes.SETDAY , value:value}),
     };
 };
   export default connect(mapStateToProps,mapDispatchToProps )(Home);

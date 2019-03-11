@@ -5,7 +5,7 @@ const initialState = {
 
    
     supervisorSelect:'',
-    dateSelect:"2019-03-03",
+    dateSelect:"",
     lang:"es",
     door:"start"
 

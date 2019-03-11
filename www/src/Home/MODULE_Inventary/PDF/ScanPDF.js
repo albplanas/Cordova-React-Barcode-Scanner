@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import * as actionTypes from '../../../store/actions';
 
-import {FindIdEmployee,FindIdLabor,CompareObjects} from "../../../Helper/Conversor"
+/*import {FindIdEmployee,FindIdLabor,CompareObjects} from "../../../Helper/Conversor"
 import logo from "../../../../img/jva.png"
 import TopPDF from "./TopPDF"
 import Payroll from "./Payroll"
-
+*/
 
 class ReportPDF extends Component {
     constructor(props) {
@@ -17,11 +17,11 @@ class ReportPDF extends Component {
             date:''
 
           }
-        this.cancel=this.cancel.bind(this);
-        this.Download=this.Download.bind(this)
-        this.Print=this.Print.bind(this)
+    //    this.cancel=this.cancel.bind(this);
+      //  this.Download=this.Download.bind(this)
+     //   this.Print=this.Print.bind(this)
      }
-     Print(doc){
+  /*   Print(doc){
       doc.autoPrint({variant: 'non-conform'});
       doc.save('autoprint.pdf');
      }
@@ -56,11 +56,11 @@ class ReportPDF extends Component {
       
        }
 
-
+*/
     render() {
 
 
-
+/*
     function PDFgenerator(list,ProjectPack,LLabor,NList,logo){
 
               var ProjectName=ProjectPack.filter(e=>e.id+''===list[0].idproject+'')[0].name
@@ -237,10 +237,7 @@ var ProjectsName=this.props.ShowReport[0].idproject.map(idpoyect=>{
                         DAILY REPORT
                       </div>
                       <div className="col-6 "style={{paddingTop:"12px"}}>
-                          <strong>Supervisor :</strong>
-                          <u>
-                          {this.props.ShowReport[0].Supervisor}
-                          </u>
+                          <strong>Supervisor :</strong><u></u>
                       </div>
                       <div className="col-3 " style={{paddingTop:"12px"}}>
                             <div class="input-group mb-3">
@@ -272,10 +269,10 @@ var ProjectsName=this.props.ShowReport[0].idproject.map(idpoyect=>{
         </div>
       </div>)
 
+*/
 
-
-      return Alex
-
+      //return Alex
+return <p className="m-5">ScanPdf</p>
 
     }
   }

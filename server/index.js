@@ -17,10 +17,10 @@ app.use(express.static(__dirname +'./../www')); //serves the index.html
       
 
   app.post('/pdf', (req, res) =>{
-        console.log(req.body.html)
+        
      
       pdf.create(html, options).toFile('./businesscard.pdf', function(err, res) {
-        if (err) return console.log(err);
+        if (err) console.log(err);
         console.log(res); // { filename: '/app/businesscard.pdf' }
       });
         res.send('Got a POST request')

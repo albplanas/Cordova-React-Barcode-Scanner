@@ -47,7 +47,10 @@ class TopBar extends Component {
                   
  
                     <div class="navbar-item m-auto text-white">
-                                <h5 >{this.state.date}</h5>
+                                <h5 >Inventory Report</h5>
+                    </div>
+                    <div class="text-white float-right">
+                               <h5 >{this.state.date}</h5>
                     </div>
                 </nav>
 

@@ -26,9 +26,8 @@ class ReportState extends Component {
 
           var ShowReport=JSON.parse(window.localStorage.getItem("OldReportsList")).filter(elem=>elem[0].date.split("-")[2]===daySelect)[0]
          
-          this.props.onUpdateLocalReport(ShowReport,this.props.date)
+          this.props.onUpdateLocalReport(ShowReport,this.props.date,this.props.supervisor)
 
-        console.log(ShowReport)
           var pass=ShowReport===undefined?false:ShowReport.length===0?false:ShowReport[0].send===false?false:true
           return pass? <ReportPDF/>: <ReportForm/>
         }
@@ -38,12 +37,14 @@ class ReportState extends Component {
     const mapStateToProps = state => {
       
       return {
-          date      :state.globalState.dateSelect
+          date      :state.globalState.dateSelect,
+          supervisor:state.globalState.supervisorSelect
       };
     };
    const mapDispatchToProps = dispatch => {
       return {
-          onUpdateLocalReport : (value,date) => dispatch({type: actionTypes.UPDATELOCALREPORT , value:value,date:date}),
+          onUpdateLocalReport : (value,date,supervisor) => dispatch({type: actionTypes.UPDATELOCALREPORT, value:value, date:date ,supervisor:supervisor}),
+    
       };
   };
     export default connect(mapStateToProps,mapDispatchToProps )(ReportState);

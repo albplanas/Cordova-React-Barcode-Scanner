@@ -1,52 +1,73 @@
 import React,{Component} from "react";
 import {readyToSend} from "../../Helper/Validation";
-import axios from "axios"
+import axios from "axios";
 
 
-export default function send() {
-                     
-                                var messenger=""
+ 
+
+
+export default function send(OnSMS) {
+
                                 var OldReport=JSON.parse(window.localStorage.getItem("OldReportsList"));
-console.log(OldReport)
+                                               
+                              
+
                                 //Valid Report
                                 var mergedReport = OldReport.filter(elem => readyToSend(elem)===true);
 
                                
 
 
-                                var online = navigator.onLine;
+                              
 
                                 
 
                                 if(mergedReport.length===0){
 
-                                        messenger="Empty"
-                                        return messenger
+                                        OnSMS("Empty")
                                 }
                                 else{
 
-
-                                    if(!online){
+                                    if(!navigator.onLine){
                                         
-                                        messenger="Offline"
-                                        return messenger
+                                        OnSMS("Offline") 
+                                       
                                      
                                     }
                                     else{
                                               
-                                                    /************************************************* 
-                                                    * Update the basic information
-                                                    * 
-                                                    * ***********************************************/
 
+                                                //Send Somepictures
 
-                                                FetchingData("Inventory")
-                                                FetchingData("Supervisor")
-                                                FetchingData("Employee")
-                                                FetchingData("Project")
-                                                FetchingData("Labor")
+                                                var PicturesArray = JSON.parse(window.localStorage.getItem("PictureRep"));
+                                                var SendPict=[];
+                                                PicturesArray.forEach((elem,index) => {
+                                                        toDataURL('http://tjpavement.com/pictures/portfolio/projectTest_1/projTest1-01.jpeg')
+                                                                .then(dataUrl => {
+                                                                                        console.log('RESULT:', dataUrl)
+                                                                                        SendPict  =SendPict.concat({
+                                                                                                                                date:elem.date,
+                                                                                                                                picture: dataUrl,
+                                                                                                                                supervisor:elem.supervisor
+                                                                                                                        }) 
+                                                                                        if(index===PicturesArray.length-1){
+                                                                                                alert(dataUrl)
+                                                                                                axios.post('http://jva-sql:8080/Assistance/FlushJsonPictures.php',JSON.stringify(SendPict))
+                                                                                                .then((response)=> {
+                                                                                                                console.log("PictResponse",response)    
+                                                                                                })
+                                                                                                .catch(error => {
+                                                                                                        console.log("this is the error",error)
+                                                                                                        OnSMS("Error")
+                                                                                                })
+                                                                                        }
+                                                                })
+                                                       
+                                                         
+                                                })
 
-                                                
+                                                // Usage
+                                             
                                                         
                                                     var list = [];
                                                     
@@ -70,7 +91,8 @@ console.log(OldReport)
                                                                                 materials:arrayReports[0].materials,
                                                                                 equipments:arrayReports[0].equipments,
                                                                                 production:arrayReports[0].production,
-                                                                                comments: arrayReports[0].comments
+                                                                                comments: arrayReports[0].comments,
+                                                                                supervisor:arrayReports[0].Supervisor,
                                                                         }) 
                                                                 }
 
@@ -81,7 +103,7 @@ console.log(OldReport)
                                                     
                                       
                                      
-                                        
+                                      
 
                                         var JSONarray= JSON.stringify(list)
                                         
@@ -91,13 +113,14 @@ console.log(OldReport)
                                         *Sent last  Report Information
                                         * 
                                         * ***********************************************/
-  
-                                    axios.post('http://jva-sql:8080/Assistance/FlushJson.php',JSONarray)
+                                      // OnSMS("Spinner")
+                                       console.log(JSONarray)
+                                  /* axios.post('http://jva-sql:8080/Assistance/FlushJson.php',JSONarray)
                                         .then((response)=> {
                                             
                                             //right now i will store the table in the redux state but in the real aplication i need to create a file outside app 
                                                 
-                                                messenger="done"
+                                              
                                                 
                                   
                                                 var Test=OldReport.map(elem => {
@@ -111,22 +134,35 @@ console.log(OldReport)
                                                 });
                                            
                                                 window.localStorage.setItem('OldReportsList',JSON.stringify(Test))
-
-
-                                                
+                                                OnSMS("Done")
+                                             
+                                               
                                         })
                                         .catch(error => {
                                                 console.log("this is the error",error)
-                                                messenger="ERROR"
-                                        })   
+                                                OnSMS("Error")
+                                        })
+                                        
+                                        
+
+                                                    /************************************************* 
+                                                    * Update the basic information
+                                                    * 
+                                                    * ***********************************************/
+
+
+                                                   FetchingData("Inventory")
+                                                   FetchingData("Supervisor")
+                                                   FetchingData("Employee")
+                                                   FetchingData("Project")
+                                                   FetchingData("Labor")
                                               
                                     }
 
                                  } 
                                 
-        return messenger
+        
   }
-
 
 
 
@@ -147,7 +183,7 @@ console.log(OldReport)
                         var  newId =response.data.map(elem=>{return [elem.Code,elem.Name] })
                       }
                       else if(query==="Labor"){
-                        var  newId =response.data.map(elem=>{return [elem.idLabor,elem.labor] })
+                        var  newId =response.data.map(elem=>{return [elem.idLabor,elem.labor,elem.idProject] })
                       }
                       else if(query==="Project"){
                         var newId =response.data.map(elem=>{return [elem.projectcode,elem.idProject,elem.projectname,elem.projectlocation]});
@@ -166,4 +202,17 @@ console.log(OldReport)
         })
  }
 
- 
+
+ const toDataURL = url => fetch(url)
+ .then(response => response.blob())
+ .then(blob => new Promise((resolve, reject) => {
+   const reader = new FileReader()
+   reader.onloadend = () => resolve(reader.result)
+   reader.onerror = reject
+   reader.readAsDataURL(blob)
+ }))
+
+
+
+      
+    
