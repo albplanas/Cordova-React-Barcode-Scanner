@@ -51,7 +51,7 @@ class TableCenter extends Component {
 
 
         this.props.onUpdateLocal(newShowReport,this.state.date,this.state.Supervisor,);
-        console.log("onUpdate",newShowReport)
+        
         SetLocalReport(newShowReport)
         this.setState({
             ShowReport:newShowReport
@@ -75,7 +75,7 @@ class TableCenter extends Component {
                 if(ProjetsAvailable.length>0){
 
                             var newShowReport=this.state.ShowReport;
-                            console.log(this.state.ShowReport)
+                           
                             newShowReport[0].idproject.push(ProjetsAvailable[0][1])
             
                             newShowReport.push({

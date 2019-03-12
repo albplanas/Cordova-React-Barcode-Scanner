@@ -36,9 +36,9 @@ class CameraReport extends Component {
 
         var id =e.target.id.split("_")[1];
 
-        console.log("ID",id)
+     
 
-
+        console.log(id)
         this.setState({
             openAlert:true,
             deleteId:id
@@ -51,7 +51,7 @@ class CameraReport extends Component {
      PassDelete(){
         var id=this.state.deleteId;
 
-        console.log("IDSS",id)
+        console.log(id)
         var newOne= this.state.PhotosList.filter((elem,index)=> index+""!==id+"")
 
         this.setState({
@@ -117,11 +117,11 @@ class CameraReport extends Component {
 
 componentWillMount(){
 
-    var PictureList=JSON.parse(window.localStorage.getItem("PictureRep"));
+     var PictureList=JSON.parse(window.localStorage.getItem("PictureRep"));
     this.setState({
 
-     // PhotosList:PictureList===null?[]: PictureList.filter(elem=> elem.date===this.props.date && elem.supervisor===this.props.supervisor).map(elem=>elem.picture)
-     PhotosList:["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrUo9CvNu5dIdtnlU1cypysABGSA7IbS3d3LTsSdr6wC6spmFbVA","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrUo9CvNu5dIdtnlU1cypysABGSA7IbS3d3LTsSdr6wC6spmFbVA"]
+     PhotosList:PictureList===null?[]: PictureList.filter(elem=> elem.date===this.props.date && elem.supervisor===this.props.supervisor).map(elem=>elem.picture)
+     //PhotosList:["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrUo9CvNu5dIdtnlU1cypysABGSA7IbS3d3LTsSdr6wC6spmFbVA","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrUo9CvNu5dIdtnlU1cypysABGSA7IbS3d3LTsSdr6wC6spmFbVA"]
     
     })
 }
@@ -184,7 +184,7 @@ function SavePict(list,date,supervisor,idproject){
                 idproject:idproject
             }
         })
-       console.log(JSON.parse(window.localStorage.getItem("PictureRep")))
+      
      var OldList =   window.localStorage.getItem("PictureRep")===null?[]:JSON.parse(window.localStorage.getItem("PictureRep"));
      
      var recentList=OldList.filter(elem=> elem.date!==date)

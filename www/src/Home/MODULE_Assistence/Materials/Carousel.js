@@ -77,10 +77,10 @@ class ControlledCarousel extends Component {
                                                   <img
                                                         className="m-auto"
                                                         style={{height:"300px"}}
-                                                        src={elem}
+                                                        src={this.state.List[(2*index)%len]}
                                                         
                                                     />
-                                            </div>
+                                        </div>
                                             <div class="row d-flex justify-content-center">
                                                     <button 
                                                             id={"pictures_"+Index} onClick={(e)=>this.props.delete_Pic(e)} className="btn btn-danger m-3">Delete</button>
@@ -92,7 +92,7 @@ class ControlledCarousel extends Component {
                                                 <img
                                                     className="m-auto"
                                                     style={{height:"300px"}}
-                                                    src={this.state.List[(index+1)%len]}
+                                                    src={this.state.List[(2*index+1)%len]}
                                                 />
                                             </div>
                                             <div class="row d-flex justify-content-center">

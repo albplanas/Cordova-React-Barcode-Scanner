@@ -31,7 +31,7 @@ class Materials extends Component {
         e.preventDefault();
         var id=e.target.id;
         var newShowReport = this.state.ShowReport;
-        console.log("this.state.ShowReport",this.state.ShowReport)
+       
         newShowReport[0]=Object.assign({},this.state.ShowReport[0]);
         newShowReport[0][id]=document.getElementById(id).value;
       
@@ -39,7 +39,7 @@ class Materials extends Component {
                 ShowReport:newShowReport
               })
 
-              console.log("newShowReport",newShowReport)
+              
               SetLocalReport(newShowReport)
 
      }

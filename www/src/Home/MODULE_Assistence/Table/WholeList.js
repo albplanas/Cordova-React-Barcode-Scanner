@@ -2,7 +2,7 @@ import React,{Component} from "react";
 
 function WholeList(props){
         
-  console.log("Supervisor",props)
+  
 
     var arrayWholeList= props.WholeList.map(elemName=>{ 
                                 
@@ -15,11 +15,10 @@ function WholeList(props){
       }
   })
 
-
   var PabloTeam=[];
   PabloTeam.push(<option className="text-muted dropdown-item text-center" disabled  value="---">Pablo's Team</option>)
   PabloTeam.push(<option className="text-muted dropdown-item text-center" disabled  value="---">-----------------------------------</option>)
-  var PabloTeamNames=["Francisco Olivera","Celestino C. Diaz","Wilfredo Galindo","Samuel Mojica","Darian Sierra","Mikel Perez Mayo","Savanes Joseph","Pedro Saldana","Calixto Zelaya"]
+  var PabloTeamNames=["Francisco Olivera","Julio C Santiesteban","Celestino C. Diaz","Wilfredo Galindo","Samuel Mojica","Darian Sierra","Mikel Perez Mayo","Savanes Joseph","Pedro Saldana","Calixto Zelaya"]
   for(var i in PabloTeamNames){
             props.NameList.indexOf(PabloTeamNames[i])!==-1?
                       ( <option className="text-muted dropdown-item" disabled  value={PabloTeamNames[i]}>{PabloTeamNames[i]}</option> ):

@@ -156,8 +156,7 @@ import CardReport from "../InformationCards/Status"
                               
                                <select style={style} class="custom-select mt-2 mb-3 mt-3"  id="language" value={this.state.lang} onChange={this.Lang}>
                                         <option className="text-dark" value="es">Español</option>
-                                        <option className="text-dark" value="en">English</option>
-                                        
+                                        <option className="text-dark" value="en">English</option>    
                                 </select>
                      </div>
               

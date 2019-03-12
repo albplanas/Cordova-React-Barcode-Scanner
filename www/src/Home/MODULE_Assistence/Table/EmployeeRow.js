@@ -43,7 +43,7 @@ class EmployeeRow extends Component {
 
      DeleteRow(e){
         e.preventDefault();
-        console.log("delete ROw")
+        
        var index= e.target.id===""? e.target.parentNode.id===""? e.target.parentNode.parentNode.id:e.target.parentNode.id   :e.target.id;
       
        var i=FindNameEmployee(index.split("_")[1],this.props.idEmloyeeList)
@@ -163,7 +163,7 @@ class EmployeeRow extends Component {
                                 if(elem.idemployee===nameBefore){elem.idemployee=nameAfter}
                     
                             })
-              console.log("Report Before",Newest)            
+                      
            this.props.Update(Newest,Newest[0].idproject,Newest[0].idproject);
            
         }
@@ -293,7 +293,7 @@ class EmployeeRow extends Component {
 
 
     render() {
-       console.log(" this.state.openAlertMaster",this.state.openAlertMaster) 
+      
         var IDproj=this.state.ShowReport[1].idproject;
        
         //Conversion 

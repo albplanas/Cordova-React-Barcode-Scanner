@@ -75,7 +75,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.UPDATELOCALREPORT:
              
 
-                        console.log("updatering ",action)
 
                             if(Array.isArray(action.value) ){
                                 if(action.value.length===0){

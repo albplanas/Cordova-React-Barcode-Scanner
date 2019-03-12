@@ -71,7 +71,7 @@
           
           var SortNewStore=NewStore.sort((a, b) => (Date.parse(a[0].date) > Date.parse(b[0].date)) ? 1 : -1)
           SortNewStore = SortNewStore.length>8?SortNewStore.slice(1,9):SortNewStore
-          console.log("SortNewStore",SortNewStore)
+          
           window.localStorage.setItem('OldReportsList',JSON.stringify(SortNewStore));
           
     }
